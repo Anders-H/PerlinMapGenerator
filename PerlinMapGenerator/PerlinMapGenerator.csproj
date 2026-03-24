@@ -53,6 +53,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dialogs\MapAttributesDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\MapAttributesDialog.Designer.cs">
+      <DependentUpon>MapAttributesDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\SizeDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -70,6 +76,9 @@
     <Compile Include="PerlinNoiseGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Dialogs\MapAttributesDialog.resx">
+      <DependentUpon>MapAttributesDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\SizeDialog.resx">
       <DependentUpon>SizeDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -102,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="landscape.ico" />
+    <None Include="Resources\PropertiesHS.png" />
     <None Include="Resources\CanvasScaleHS.png" />
   </ItemGroup>
   <ItemGroup />

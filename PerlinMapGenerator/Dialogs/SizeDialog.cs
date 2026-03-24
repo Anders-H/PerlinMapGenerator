@@ -25,13 +25,13 @@ public partial class SizeDialog : Form
 
     private void txtWidth_Validated(object sender, EventArgs e)
     {
-        var result = ParseValue(txtWidth.Text, Document.Width);
+        var result = ParseValue(txtWidth.Text, Document!.Width);
         txtWidth.Text = result.ToString();
     }
 
     private void txtHeight_Validated(object sender, EventArgs e)
     {
-        var result = ParseValue(txtHeight.Text, Document.Height);
+        var result = ParseValue(txtHeight.Text, Document!.Height);
         txtHeight.Text = result.ToString();
     }
 
