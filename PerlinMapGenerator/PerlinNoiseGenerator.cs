@@ -8,23 +8,20 @@ public class PerlinNoiseGenerator
 {
     public void Render(FastBitmap b, Document d)
     {
-        float scale = 100f;
         int seed = 12345;
+        float persistence = d.Persistence / 100f; // hur snabbt amplituden minskar
+        float lacunarity = d.Lacunarity / 10f; // hur snabbt frekvensen ökar
 
-        int octaves = 5;
-        float persistence = 0.5f;  // hur snabbt amplituden minskar
-        float lacunarity = 2.0f;   // hur snabbt frekvensen ökar
-
-        Perlin perlin = new Perlin(seed);
+        Perlin perlin = new Perlin(d.Seed);
 
         for (int y = 0; y < d.Height; y++)
         {
             for (int x = 0; x < d.Width; x++)
             {
-                float nx = x / scale;
-                float ny = y / scale;
+                float nx = x / d.Scale;
+                float ny = y / d.Scale;
 
-                float noiseValue = FBM(perlin, nx, ny, octaves, persistence, lacunarity);
+                float noiseValue = FBM(perlin, nx, ny, d.Octaves, persistence, lacunarity);
 
                 // Radial mask för kontinenter
                 float dx = (x - d.Width / 2f) / (d.Width / 2f);

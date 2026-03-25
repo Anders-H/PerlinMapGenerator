@@ -85,10 +85,13 @@ public partial class MainWindow : Form
         x.Document = _document;
 
         if (x.ShowDialog(this) == DialogResult.OK)
-        {
-            Render();
-            picMap.Invalidate();
-        }
+            ApplyChanges();
+    }
+
+    private void ApplyChanges()
+    {
+        Render();
+        picMap.Invalidate();
     }
 
     private void toolStripButton1_Click(object sender, EventArgs e) =>
@@ -103,6 +106,11 @@ public partial class MainWindow : Form
     private void mapAttributesToolStripMenuItem_Click(object sender, EventArgs e)
     {
         using var x = new MapAttributesDialog();
+        x.Document = _document;
+        x.ApplyDelegate = ApplyChanges;
+        
+        if (x.ShowDialog(this) == DialogResult.OK)
+            ApplyChanges();
     }
 
     private void btnMapAttributes_Click(object sender, EventArgs e) =>
