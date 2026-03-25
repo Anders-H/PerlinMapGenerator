@@ -113,6 +113,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="landscape.ico" />
+    <None Include="Resources\ZoomInHS.png" />
+    <None Include="Resources\ZoomOutHS.png" />
     <None Include="Resources\PropertiesHS.png" />
     <None Include="Resources\CanvasScaleHS.png" />
   </ItemGroup>
