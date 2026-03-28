@@ -54,8 +54,10 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.panel1 = new System.Windows.Forms.Panel();
             this.picMap = new System.Windows.Forms.PictureBox();
+            this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).BeginInit();
             this.SuspendLayout();
@@ -129,20 +131,20 @@
             this.toolStripZoom100,
             this.toolStripZoom200});
             this.zoomToolStripMenuItem.Name = "zoomToolStripMenuItem";
-            this.zoomToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.zoomToolStripMenuItem.Size = new System.Drawing.Size(106, 22);
             this.zoomToolStripMenuItem.Text = "Zoom";
             // 
             // toolStripZoom25
             // 
             this.toolStripZoom25.Name = "toolStripZoom25";
-            this.toolStripZoom25.Size = new System.Drawing.Size(180, 22);
+            this.toolStripZoom25.Size = new System.Drawing.Size(102, 22);
             this.toolStripZoom25.Text = "25%";
             this.toolStripZoom25.Click += new System.EventHandler(this.toolStripZoom25_Click);
             // 
             // toolStripZoom50
             // 
             this.toolStripZoom50.Name = "toolStripZoom50";
-            this.toolStripZoom50.Size = new System.Drawing.Size(180, 22);
+            this.toolStripZoom50.Size = new System.Drawing.Size(102, 22);
             this.toolStripZoom50.Text = "50%";
             this.toolStripZoom50.Click += new System.EventHandler(this.toolStripZoom50_Click);
             // 
@@ -151,14 +153,14 @@
             this.toolStripZoom100.Checked = true;
             this.toolStripZoom100.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripZoom100.Name = "toolStripZoom100";
-            this.toolStripZoom100.Size = new System.Drawing.Size(180, 22);
+            this.toolStripZoom100.Size = new System.Drawing.Size(102, 22);
             this.toolStripZoom100.Text = "100%";
             this.toolStripZoom100.Click += new System.EventHandler(this.toolStripZoom100_Click);
             // 
             // toolStripZoom200
             // 
             this.toolStripZoom200.Name = "toolStripZoom200";
-            this.toolStripZoom200.Size = new System.Drawing.Size(180, 22);
+            this.toolStripZoom200.Size = new System.Drawing.Size(102, 22);
             this.toolStripZoom200.Text = "200%";
             this.toolStripZoom200.Click += new System.EventHandler(this.toolStripZoom200_Click);
             // 
@@ -253,6 +255,8 @@
             // 
             // statusStrip1
             // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblStatus});
             this.statusStrip1.Location = new System.Drawing.Point(0, 428);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(800, 22);
@@ -281,6 +285,12 @@
             this.picMap.TabStop = false;
             this.picMap.Paint += new System.Windows.Forms.PaintEventHandler(this.picMap_Paint);
             // 
+            // lblStatus
+            // 
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(26, 17);
+            this.lblStatus.Text = "OK.";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -302,6 +312,8 @@
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).EndInit();
             this.ResumeLayout(false);
@@ -336,6 +348,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton btnZoomOut;
         private System.Windows.Forms.ToolStripButton btnZoomIn;
+        private System.Windows.Forms.ToolStripStatusLabel lblStatus;
     }
 }
 

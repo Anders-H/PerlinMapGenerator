@@ -55,6 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColorLayer.cs" />
+    <Compile Include="ColorLayerList.cs" />
     <Compile Include="Dialogs\MapAttributesDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -75,6 +77,7 @@
     <Compile Include="MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Perlin.cs" />
     <Compile Include="PerlinNoiseGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

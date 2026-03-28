@@ -42,6 +42,14 @@ public partial class MainWindow : Form
             _bitmap = null;
         }
 
+        if (_document.ColorLayers.Count < 2)
+        {
+            lblStatus.Text = @"Render failed: Too few colors registered.";
+            return;
+        }
+
+        var exception = "";
+
         try
         {
             _bitmap = new Bitmap(_document.Width, _document.Height);
@@ -51,26 +59,22 @@ public partial class MainWindow : Form
             perlinNoiseGenerator.Render(fastBitmap, _document);
             fastBitmap.Unlock();
         }
-        catch
+        catch (Exception ex)
         {
-            // ignored
+            exception = $" (with {ex.GetType().Name}: {ex.Message})";
         }
+
+        lblStatus.Text = $@"Render finished at {DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}{exception}.";
     }
 
-    private void MainWindow_Resize(object sender, EventArgs e)
-    {
+    private void MainWindow_Resize(object sender, EventArgs e) =>
         picMap.Invalidate();
-    }
 
-    private void panel1_Resize(object sender, EventArgs e)
-    {
+    private void panel1_Resize(object sender, EventArgs e) =>
         SetPictureBoxSize();
-    }
 
-    private void MainWindow_Shown(object sender, EventArgs e)
-    {
+    private void MainWindow_Shown(object sender, EventArgs e) =>
         Refresh();
-    }
 
     private void SetPictureBoxSize()
     {
@@ -104,7 +108,10 @@ public partial class MainWindow : Form
         x.Document = _document;
 
         if (x.ShowDialog(this) == DialogResult.OK)
+        {
+            SetPictureBoxSize();
             ApplyChanges();
+        }
     }
 
     private void ApplyChanges()

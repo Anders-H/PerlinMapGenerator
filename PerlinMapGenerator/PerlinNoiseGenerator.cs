@@ -1,35 +1,44 @@
 ﻿#nullable enable
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace PerlinMapGenerator;
 
 public class PerlinNoiseGenerator
 {
+    private Document? _d;
+    private List<ColorLayer>? _colors;
+
     public void Render(FastBitmap b, Document d)
     {
-        int seed = 12345;
-        float persistence = d.Persistence / 100f; // hur snabbt amplituden minskar
-        float lacunarity = d.Lacunarity / 10f; // hur snabbt frekvensen ökar
+        _d = d;
+        _colors = _d.ColorLayers.OrderBy(x => x.HighestValueFloat).ToList();
+        
+        if ((_colors?.Count ?? 0) < 2)
+            return;
 
-        Perlin perlin = new Perlin(d.Seed);
+        var persistence = d.Persistence / 100f; // hur snabbt amplituden minskar
+        var lacunarity = d.Lacunarity / 10f; // hur snabbt frekvensen ökar
+        var perlin = new Perlin(d.Seed);
 
-        for (int y = 0; y < d.Height; y++)
+        for (var y = 0; y < d.Height; y++)
         {
-            for (int x = 0; x < d.Width; x++)
+            for (var x = 0; x < d.Width; x++)
             {
-                float nx = x / d.Scale;
-                float ny = y / d.Scale;
+                var nx = x / d.Scale;
+                var ny = y / d.Scale;
 
-                float noiseValue = FBM(perlin, nx, ny, d.Octaves, persistence, lacunarity);
+                var noiseValue = Fbm(perlin, nx, ny, d.Octaves, persistence, lacunarity);
 
                 // Radial mask för kontinenter
-                float dx = (x - d.Width / 2f) / (d.Width / 2f);
-                float dy = (y - d.Height / 2f) / (d.Height / 2f);
-                float dist = (float)Math.Sqrt(dx * dx + dy * dy);
-                float mask = Clamp(1f - dist, 0f, 1f);
+                var dx = (x - d.Width / 2f) / (d.Width / 2f);
+                var dy = (y - d.Height / 2f) / (d.Height / 2f);
+                var dist = (float)Math.Sqrt(dx * dx + dy * dy);
+                var mask = Clamp(1f - dist, 0f, 1f);
 
-                float heightValue = noiseValue * mask;
+                var heightValue = noiseValue * mask;
 
                 b.SetPixel(x, y, HeightToColor(heightValue));
             }
@@ -47,16 +56,16 @@ public class PerlinNoiseGenerator
         return value;
     }
 
-    static float FBM(Perlin perlin, float x, float y, int octaves, float persistence, float lacunarity)
+    static float Fbm(Perlin perlin, float x, float y, int octaves, float persistence, float lacunarity)
     {
-        float total = 0f;
-        float amplitude = 1f;
-        float frequency = 1f;
-        float maxValue = 0f;
+        var total = 0f;
+        var amplitude = 1f;
+        var frequency = 1f;
+        var maxValue = 0f;
 
-        for (int i = 0; i < octaves; i++)
+        for (var i = 0; i < octaves; i++)
         {
-            float n = perlin.Noise(x * frequency, y * frequency);
+            var n = perlin.Noise(x * frequency, y * frequency);
             n = (n + 1f) * 0.5f; // mappa från [-1,1] till [0,1]
 
             total += n * amplitude;
@@ -69,77 +78,17 @@ public class PerlinNoiseGenerator
         return total / maxValue; // normalisera till [0,1]
     }
 
-    static Color HeightToColor(float h)
+    private Color HeightToColor(float h)
     {
-        if (h < 0.25f)
-            return Color.FromArgb(0, 0, 80);        // djupvatten
-        
-        if (h < 0.35f)
-            return Color.FromArgb(0, 80, 160);      // kust
-        
-        if (h < 0.6f)
-            return Color.FromArgb(34, 139, 34);     // gräs
-        
-        if (h < 0.8f)
-            return Color.FromArgb(139, 126, 102);   // kullar
+        if (_d == null || _colors == null)
+            return Color.Green;
 
-        return Color.FromArgb(245, 245, 245);                  // berg
-    }
-}
-
-/// <summary>
-/// Enkel 2D-Perlin-implementation
-/// </summary>
-public class Perlin
-{
-    private readonly int[] perm;
-
-    public Perlin(int seed)
-    {
-        perm = new int[512];
-        int[] p = new int[256];
-        for (int i = 0; i < 256; i++) p[i] = i;
-
-        Random rand = new Random(seed);
-        for (int i = 255; i > 0; i--)
+        foreach (var color in _colors)
         {
-            int j = rand.Next(i + 1);
-            (p[i], p[j]) = (p[j], p[i]);
+            if (h < color.HighestValueFloat)
+                return color.Color;
         }
 
-        for (int i = 0; i < 512; i++)
-            perm[i] = p[i & 255];
-    }
-
-    public float Noise(float x, float y)
-    {
-        int xi = (int)Math.Floor(x) & 255;
-        int yi = (int)Math.Floor(y) & 255;
-
-        float xf = x - (float)Math.Floor(x);
-        float yf = y - (float)Math.Floor(y);
-
-        float u = Fade(xf);
-        float v = Fade(yf);
-
-        int aa = perm[perm[xi] + yi];
-        int ab = perm[perm[xi] + yi + 1];
-        int ba = perm[perm[xi + 1] + yi];
-        int bb = perm[perm[xi + 1] + yi + 1];
-
-        float x1 = Lerp(Grad(aa, xf, yf), Grad(ba, xf - 1, yf), u);
-        float x2 = Lerp(Grad(ab, xf, yf - 1), Grad(bb, xf - 1, yf - 1), u);
-
-        return Lerp(x1, x2, v);
-    }
-
-    private static float Fade(float t) => t * t * t * (t * (t * 6 - 15) + 10);
-    private static float Lerp(float a, float b, float t) => a + t * (b - a);
-    private static float Grad(int hash, float x, float y)
-    {
-        int h = hash & 7;
-        float u = h < 4 ? x : y;
-        float v = h < 4 ? y : x;
-        return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
+        return Color.Red;
     }
 }

@@ -131,12 +131,12 @@
             // 
             this.trbPersistence.LargeChange = 20;
             this.trbPersistence.Location = new System.Drawing.Point(8, 160);
-            this.trbPersistence.Maximum = 200;
+            this.trbPersistence.Maximum = 100;
             this.trbPersistence.Minimum = 1;
             this.trbPersistence.Name = "trbPersistence";
             this.trbPersistence.Size = new System.Drawing.Size(528, 45);
             this.trbPersistence.TabIndex = 5;
-            this.trbPersistence.TickFrequency = 10;
+            this.trbPersistence.TickFrequency = 5;
             this.trbPersistence.Value = 20;
             this.trbPersistence.Scroll += new System.EventHandler(this.trbPersistence_Scroll);
             this.trbPersistence.ValueChanged += new System.EventHandler(this.trbPersistence_ValueChanged);
@@ -154,13 +154,13 @@
             // 
             this.trbLacunarity.LargeChange = 20;
             this.trbLacunarity.Location = new System.Drawing.Point(8, 228);
-            this.trbLacunarity.Maximum = 100;
+            this.trbLacunarity.Maximum = 50;
             this.trbLacunarity.Minimum = 1;
             this.trbLacunarity.Name = "trbLacunarity";
             this.trbLacunarity.Size = new System.Drawing.Size(528, 45);
             this.trbLacunarity.TabIndex = 7;
             this.trbLacunarity.TickFrequency = 5;
-            this.trbLacunarity.Value = 20;
+            this.trbLacunarity.Value = 5;
             this.trbLacunarity.Scroll += new System.EventHandler(this.trbLacunarity_Scroll);
             this.trbLacunarity.ValueChanged += new System.EventHandler(this.trbLacunarity_ValueChanged);
             // 

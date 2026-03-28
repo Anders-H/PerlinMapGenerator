@@ -27,7 +27,7 @@ public partial class MapAttributesDialog : Form
 
         lblScale.Text = Document.Scale.ToString("n0");
         lblOctaves.Text = Document.Octaves.ToString("n0");
-        lblPersistenceCaption.Text = (Document.Persistence / 100f).ToString("n2");
+        lblPersistence.Text = (Document.Persistence / 100f).ToString("n2");
         lblLacunarity.Text = (Document.Lacunarity / 10f).ToString("n1");
         lblSeed.Text = Document.Seed.ToString("n0");
     }
@@ -69,7 +69,7 @@ public partial class MapAttributesDialog : Form
         trbOctaves_Scroll(sender, e);
 
     private void trbPersistence_Scroll(object sender, EventArgs e) =>
-        lblPersistenceCaption.Text = (trbPersistence.Value / 100f).ToString("n2");
+        lblPersistence.Text = (trbPersistence.Value / 100f).ToString("n2");
 
     private void trbPersistence_ValueChanged(object sender, EventArgs e) =>
         trbPersistence_Scroll(sender,  e);
