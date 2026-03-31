@@ -85,10 +85,10 @@ public class PerlinNoiseGenerator
 
         foreach (var color in _colors)
         {
-            if (h < color.HighestValueFloat)
+            if (h <= color.HighestValueFloat)
                 return color.Color;
         }
 
-        return Color.Red;
+        return _colors.Last().Color;
     }
 }

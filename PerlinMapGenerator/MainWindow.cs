@@ -224,4 +224,17 @@ public partial class MainWindow : Form
         else if (toolStripZoom100.Checked)
             toolStripZoom200_Click(sender, e);
     }
+
+    private void editColorsToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        using var x = new ColorsDialog();
+        x.Document = _document;
+        x.ApplyDelegate = ApplyChanges;
+
+        if (x.ShowDialog(this) == DialogResult.OK)
+            ApplyChanges();
+    }
+
+    private void btnEditColors_Click(object sender, EventArgs e) =>
+        editColorsToolStripMenuItem_Click(sender, e);
 }
