@@ -108,6 +108,7 @@
             // 
             // trbOctaves
             // 
+            this.trbOctaves.LargeChange = 2;
             this.trbOctaves.Location = new System.Drawing.Point(8, 92);
             this.trbOctaves.Maximum = 20;
             this.trbOctaves.Minimum = 1;

@@ -35,4 +35,7 @@ public class Document
             new ColorLayer(100, "Glaciär", Color.FromArgb(255, 255, 255, 255))
         ];
     }
+
+    public void SortColorLayers() =>
+        ColorLayers.SortColorLayers();
 }

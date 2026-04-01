@@ -3,6 +3,7 @@ using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using PerlinMapGenerator.Dialogs.ColorDialogs;
 
 namespace PerlinMapGenerator.Dialogs;
 
@@ -23,8 +24,8 @@ public partial class ColorsDialog : Form
         if (Document == null || ApplyDelegate == null)
             throw new SystemException();
 
-        foreach (var colorLayer in Document.ColorLayers.OrderBy(x => x.HighestValue))
-            ColorLayers.Add(colorLayer);
+        Document.SortColorLayers();
+        ColorLayers.AddRange(Document.ColorLayers);
     }
 
     private void ColorsDialog_Shown(object sender, EventArgs e)
@@ -61,9 +62,22 @@ public partial class ColorsDialog : Form
 
     private void btnAdd_Click(object sender, EventArgs e)
     {
+        if (Document == null)
+            throw new SystemException();
 
-        RebuildColorLayers();
+        using var x = new AddColorDialog();
+        
+        if (x.ShowDialog(this) != DialogResult.OK)
+            return;
+
+        if (x.NewColorLayer == null)
+            throw new SystemException();
+
+        Document.ColorLayers.Add(x.NewColorLayer);
+        Document.SortColorLayers();
         RebuildForm();
+        RebuildColorLayers();
+        pictureBox1.Invalidate();
     }
 
     private void btnEdit_Click(object sender, EventArgs e)

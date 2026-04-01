@@ -23,4 +23,11 @@ public class ColorLayerList : List<ColorLayer>
         return Count > 0 ? this.Last().Color : Color.Aqua;
 
     }
+
+    public void SortColorLayers()
+    {
+        var sorted = this.OrderBy(x => x.HighestValue).ToList();
+        Clear();
+        AddRange(sorted);
+    }
 }
