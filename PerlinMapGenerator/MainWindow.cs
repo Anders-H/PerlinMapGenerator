@@ -126,7 +126,7 @@ public partial class MainWindow : Form
     private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
     {
         var version = Assembly.GetExecutingAssembly().GetName().Version.ToString().Split('.');
-        MessageBox.Show(this, $@"Perlin Map Generator version {version[0]}.{version[1]} written by Anders Hesselbom.", @"About", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        MessageBox.Show(this, $@"Perlin Map Generator version {version[0]}.{version[1]} written by Anders Hesselbom. For rendering, the FastBitmap class by Luiz Fernando is used.", @"About", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 
     private void mapAttributesToolStripMenuItem_Click(object sender, EventArgs e)

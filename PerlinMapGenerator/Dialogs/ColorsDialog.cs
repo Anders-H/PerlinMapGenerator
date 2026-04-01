@@ -35,6 +35,7 @@ public partial class ColorsDialog : Form
         listView1.Columns.Add("Position", 150, HorizontalAlignment.Center);
         Refresh();
         RebuildForm();
+        pictureBox1.Invalidate();
     }
 
     private void RebuildForm()
@@ -137,11 +138,15 @@ public partial class ColorsDialog : Form
     {
         var x = 0;
 
-        for (var i = 0; i < ColorLayers.Count - 1; i++)
+        for (var i = 0; i < 100; i++)
         {
-            // todo
-            //e.Graphics.DrawRectangle();
+            var color = ColorLayers.GetColorForIntValue(i);
+            using var brush = new SolidBrush(color);
+            e.Graphics.FillRectangle(brush, x, 0, 4, pictureBox1.ClientRectangle.Height);
             x += 4;
         }
+        
+        e.Graphics.DrawRectangle(Pens.DimGray, 0, 0, pictureBox1.ClientRectangle.Width - 1, pictureBox1.ClientRectangle.Height - 1);
+        e.Graphics.DrawRectangle(Pens.White, 1, 1, pictureBox1.ClientRectangle.Width - 3, pictureBox1.ClientRectangle.Height - 3);
     }
 }
