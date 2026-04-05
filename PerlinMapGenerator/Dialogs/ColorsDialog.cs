@@ -33,7 +33,7 @@ public partial class ColorsDialog : Form
         listView1.Items.Clear();
         listView1.Columns.Clear();
         listView1.Columns.Add("Name", 150);
-        listView1.Columns.Add("Position", 150, HorizontalAlignment.Center);
+        listView1.Columns.Add("<= Position", 150, HorizontalAlignment.Center);
         Refresh();
         RebuildForm();
         pictureBox1.Invalidate();
@@ -73,31 +73,75 @@ public partial class ColorsDialog : Form
         if (x.NewColorLayer == null)
             throw new SystemException();
 
-        Document.ColorLayers.Add(x.NewColorLayer);
-        Document.SortColorLayers();
+        ColorLayers.Add(x.NewColorLayer);
+        ColorLayers.SortColorLayers();
         RebuildForm();
-        RebuildColorLayers();
+        FindColorLayer(x.NewColorLayer);
         pictureBox1.Invalidate();
     }
 
     private void btnEdit_Click(object sender, EventArgs e)
     {
+        if (listView1.SelectedItems.Count <= 0)
+        {
+            MessageBox.Show(this, @"Please select a color layer to edit.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
 
-        RebuildColorLayers();
+        using var x = new EditColorDialog();
+        x.ColorLayer = (ColorLayer)listView1.SelectedItems[0].Tag;
+        x.ShowDialog(this);
         RebuildForm();
+        FindColorLayer(x.ColorLayer);
+        pictureBox1.Invalidate();
+    }
+
+    private void FindColorLayer(ColorLayer? colorLayer)
+    {
+        if (colorLayer == null)
+            return;
+
+        foreach (ListViewItem item in listView1.Items)
+        {
+            var otherLayer = item.Tag as ColorLayer;
+
+            if (otherLayer != null)
+                continue;
+
+            if (otherLayer != colorLayer)
+                continue;
+
+            listView1.SelectedItems.Clear();
+            item.Selected = true;
+            item.Focused = true;
+            item.EnsureVisible();
+            return;
+        }
     }
 
     private void btnDelete_Click(object sender, EventArgs e)
     {
+        if (listView1.SelectedItems.Count <= 0)
+        {
+            MessageBox.Show(this, @"Please select a color layer to delete.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
 
-        RebuildColorLayers();
+        if (listView1.SelectedItems[0].Tag is not ColorLayer colorLayer)
+            return;
+
+        if (MessageBox.Show(this, $@"Are you sure you want to delete the selected color layer ({colorLayer})?", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            return;
+
+        ColorLayers.Remove(colorLayer);
         RebuildForm();
+        pictureBox1.Invalidate();
     }
 
     private void btnApply_Click(object sender, EventArgs e)
     {
         RebuildColorLayers();
-        CopyColorLayersToDocument();
+        ApplyDelegate?.Invoke();
 
         if (ColorLayers.Count < 2)
             MessageBox.Show(this, @"You must have at least 2 colors registered.", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -105,9 +149,8 @@ public partial class ColorsDialog : Form
 
     private void btnOk_Click(object sender, EventArgs e)
     {
-
         RebuildColorLayers();
-        CopyColorLayersToDocument();
+        ApplyDelegate?.Invoke();
 
         if (ColorLayers.Count < 2)
         {
@@ -120,12 +163,11 @@ public partial class ColorsDialog : Form
 
     private void RebuildColorLayers()
     {
+        if (Document == null)
+            throw new SystemException();
 
-    }
-
-    private void CopyColorLayersToDocument()
-    {
-
+        Document.ColorLayers.Clear();
+        Document.ColorLayers.AddRange(ColorLayers.OrderBy(x => x.HighestValue).ToList());
     }
 
     private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -142,10 +184,15 @@ public partial class ColorsDialog : Form
 
     private void listView1_KeyDown(object sender, KeyEventArgs e)
     {
-        if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
-            btnEdit_Click(sender, e);
-        else if (e.KeyCode == Keys.Delete)
-            btnDelete_Click(sender, e);
+        switch (e.KeyCode)
+        {
+            case Keys.Enter:
+                btnEdit_Click(sender, e);
+                break;
+            case Keys.Delete:
+                btnDelete_Click(sender, e);
+                break;
+        }
     }
 
     private void pictureBox1_Paint(object sender, PaintEventArgs e)

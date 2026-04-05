@@ -4,30 +4,28 @@ using System.Windows.Forms;
 
 namespace PerlinMapGenerator.Dialogs.ColorDialogs;
 
-public partial class AddColorDialog : Form
+public partial class EditColorDialog : Form
 {
-    private static readonly Random Random;
-    public ColorLayer? NewColorLayer { get; private set; }
+    public ColorLayer? ColorLayer { get; set; }
 
-    static AddColorDialog()
-    {
-        Random ??= new Random();
-    }
-
-    public AddColorDialog()
+    public EditColorDialog()
     {
         InitializeComponent();
     }
 
-    private void AddColorDialog_Load(object sender, EventArgs e)
+    private void EditColorDialog_Load(object sender, EventArgs e)
     {
-        txtName.Text = @"New layer";
-        var color = System.Drawing.Color.FromArgb(255, Random.Next(256), Random.Next(256), Random.Next(256));
+        if (ColorLayer == null)
+            throw new SystemException();
+
+        Text = $@"Edit Color ({ColorLayer.ColorString}) - {ColorLayer.Name} at <= {ColorLayer.HighestValue}";
+        txtName.Text = ColorLayer.Name;
+        var color = ColorLayer.Color;
         txtColor.Text = $@"{color.R:n0}, {color.G:n0}, {color.B:n0}";
         btnColor.BackColor = color;
         btnColor.Tag = color;
         btnColor.ForeColor = color.GetBrightness() < 0.5f ? System.Drawing.Color.White : System.Drawing.Color.Black;
-        trbHighestValue.Value = Random.Next(10, 91);
+        trbHighestValue.Value = ColorLayer.HighestValue;
         lblHighestValue.Text = trbHighestValue.Value.ToString("n0");
     }
 
@@ -36,12 +34,6 @@ public partial class AddColorDialog : Form
 
     private void trbHighestValue_Scroll(object sender, EventArgs e) =>
         trbHighestValue_ValueChanged(sender, e);
-
-    private void btnOk_Click(object sender, EventArgs e)
-    {
-        NewColorLayer = new ColorLayer(trbHighestValue.Value, txtName.Text.Trim(), (System.Drawing.Color)btnColor.Tag);
-        DialogResult = DialogResult.OK;
-    }
 
     private void btnColor_Click(object sender, EventArgs e)
     {
@@ -55,5 +47,16 @@ public partial class AddColorDialog : Form
         btnColor.BackColor = x.Color;
         btnColor.ForeColor = x.Color.GetBrightness() < 0.5f ? System.Drawing.Color.White : System.Drawing.Color.Black;
         txtColor.Text = $@"{x.Color.R:n0}, {x.Color.G:n0}, {x.Color.B:n0}";
+    }
+
+    private void btnOk_Click(object sender, EventArgs e)
+    {
+        if (ColorLayer == null)
+            throw new SystemException();
+
+        ColorLayer.Name = txtName.Text.Trim();
+        ColorLayer.Color = (System.Drawing.Color)btnColor.Tag;
+        ColorLayer.HighestValue = trbHighestValue.Value;
+        DialogResult = DialogResult.OK;
     }
 }

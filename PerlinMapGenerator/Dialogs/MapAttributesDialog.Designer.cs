@@ -153,7 +153,6 @@
             // 
             // trbLacunarity
             // 
-            this.trbLacunarity.LargeChange = 20;
             this.trbLacunarity.Location = new System.Drawing.Point(8, 228);
             this.trbLacunarity.Maximum = 50;
             this.trbLacunarity.Minimum = 1;

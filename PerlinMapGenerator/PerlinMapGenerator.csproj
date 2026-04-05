@@ -63,6 +63,12 @@
     <Compile Include="Dialogs\ColorDialogs\AddColorDialog.Designer.cs">
       <DependentUpon>AddColorDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\ColorDialogs\EditColorDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\ColorDialogs\EditColorDialog.Designer.cs">
+      <DependentUpon>EditColorDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\ColorsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -95,6 +101,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Dialogs\ColorDialogs\AddColorDialog.resx">
       <DependentUpon>AddColorDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\ColorDialogs\EditColorDialog.resx">
+      <DependentUpon>EditColorDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\ColorsDialog.resx">
       <DependentUpon>ColorsDialog.cs</DependentUpon>

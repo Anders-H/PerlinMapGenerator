@@ -20,4 +20,7 @@ public class ColorLayer
 
     public override string ToString() =>
         $"{Name}: {HighestValueFloat:n2}";
+
+    public string ColorString =>
+        $@"{Color.R:n0}, {Color.G:n0}, {Color.B:n0}";
 }

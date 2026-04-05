@@ -61,6 +61,7 @@
             // 
             this.txtColor.Location = new System.Drawing.Point(8, 72);
             this.txtColor.Name = "txtColor";
+            this.txtColor.ReadOnly = true;
             this.txtColor.Size = new System.Drawing.Size(188, 20);
             this.txtColor.TabIndex = 3;
             // 
@@ -81,6 +82,7 @@
             this.btnColor.TabIndex = 4;
             this.btnColor.Text = "...";
             this.btnColor.UseVisualStyleBackColor = true;
+            this.btnColor.Click += new System.EventHandler(this.btnColor_Click);
             // 
             // label3
             // 
