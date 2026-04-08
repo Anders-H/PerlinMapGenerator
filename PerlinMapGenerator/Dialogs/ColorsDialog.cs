@@ -25,7 +25,9 @@ public partial class ColorsDialog : Form
             throw new SystemException();
 
         Document.SortColorLayers();
-        ColorLayers.AddRange(Document.ColorLayers);
+
+        foreach (var existingColorLayer in Document.ColorLayers)
+            ColorLayers.Add(new ColorLayer(existingColorLayer));
     }
 
     private void ColorsDialog_Shown(object sender, EventArgs e)
@@ -166,8 +168,11 @@ public partial class ColorsDialog : Form
         if (Document == null)
             throw new SystemException();
 
+        var newColors = ColorLayers.OrderBy(x => x.HighestValue).ToList();
         Document.ColorLayers.Clear();
-        Document.ColorLayers.AddRange(ColorLayers.OrderBy(x => x.HighestValue).ToList());
+
+        foreach (var colorLayer in newColors)
+            Document.ColorLayers.Add(new ColorLayer(colorLayer));
     }
 
     private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)

@@ -43,8 +43,8 @@ public partial class SizeDialog : Form
             
             if (v < 32)
                 v = 32;
-            else if (v > 8192)
-                v = 8192;
+            else if (v > 512)
+                v = 512;
 
             return v;
         }

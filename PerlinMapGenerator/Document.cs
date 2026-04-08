@@ -1,6 +1,10 @@
 ﻿#nullable enable
 using System;
 using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Text;
+using IniParser;
 
 namespace PerlinMapGenerator;
 
@@ -38,4 +42,41 @@ public class Document
 
     public void SortColorLayers() =>
         ColorLayers.SortColorLayers();
+
+    public void Save(string filePath)
+    {
+        var raw = new StringBuilder();
+        raw.AppendLine("[File Version]");
+        raw.AppendLine("File Type = Perlin Map File (WinSoft)");
+        raw.AppendLine("Version = 1.0");
+        raw.AppendLine("[Perlin Settings]");
+        raw.AppendLine($"Width = {Width}");
+        raw.AppendLine($"Height = {Height}");
+        raw.AppendLine($"Octaves = {Octaves}");
+        raw.AppendLine($"Seed = {Seed}");
+        raw.AppendLine($"Scale = {Scale.ToString("n1", CultureInfo.InvariantCulture)}");
+        raw.AppendLine($"Persistence = {Persistence.ToString("n1", CultureInfo.InvariantCulture)}");
+        raw.AppendLine($"Lacunarity = {Lacunarity.ToString("n1", CultureInfo.InvariantCulture)}");
+        raw.AppendLine("[Color Layers]");
+        var colorIndex = 0;
+
+        foreach (var colorLayer in ColorLayers)
+        {
+            var n = ColorLayer.EncodeStepName(colorLayer.Name);
+            raw.AppendLine($"Color{colorIndex:0000} = {n}|{colorLayer.HighestValue}|{colorLayer.ColorString}");
+            colorIndex++;
+        }
+
+        var parser = new Parser(raw.ToString());
+
+        if (parser.TryParse(out var message, out var iniFile))
+        {
+            var data = iniFile.Render();
+            File.WriteAllText(filePath, data);
+        }
+        else
+        {
+            throw new SystemException($"Failed to construct data file: {message}");
+        }
+    }
 }

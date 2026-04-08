@@ -56,6 +56,7 @@
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(228, 20);
             this.txtName.TabIndex = 1;
+            this.txtName.Validating += new System.ComponentModel.CancelEventHandler(this.txtName_Validating);
             // 
             // txtColor
             // 

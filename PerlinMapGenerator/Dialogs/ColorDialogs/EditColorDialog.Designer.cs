@@ -112,6 +112,7 @@
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(228, 20);
             this.txtName.TabIndex = 1;
+            this.txtName.Validating += new System.ComponentModel.CancelEventHandler(this.txtName_Validating);
             // 
             // label1
             // 
@@ -136,8 +137,10 @@
             // 
             // EditColorDialog
             // 
+            this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(394, 146);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);

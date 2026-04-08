@@ -40,6 +40,9 @@
     <ApplicationIcon>landscape.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="IniParser, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WinSoftIniParser.1.0.0\lib\netstandard2.0\IniParser.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.dll</HintPath>
     </Reference>
@@ -88,6 +91,12 @@
       <DependentUpon>SizeDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Document.cs" />
+    <Compile Include="ExportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExportDialog.Designer.cs">
+      <DependentUpon>ExportDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="FastBitmap.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
@@ -113,6 +122,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\SizeDialog.resx">
       <DependentUpon>SizeDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExportDialog.resx">
+      <DependentUpon>ExportDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
@@ -143,6 +155,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="landscape.ico" />
+    <None Include="Resources\saveHS.png" />
+    <None Include="Resources\openHS.png" />
+    <None Include="Resources\export16.png" />
+    <None Include="Resources\close16.png" />
+    <None Include="Resources\ZoomHS.png" />
+    <None Include="Resources\Help.png" />
+    <None Include="Resources\NewDocumentHS.png" />
     <None Include="Resources\ColorHS.png" />
     <None Include="Resources\ZoomInHS.png" />
     <None Include="Resources\ZoomOutHS.png" />

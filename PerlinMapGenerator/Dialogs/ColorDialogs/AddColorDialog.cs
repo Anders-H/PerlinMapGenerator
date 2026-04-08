@@ -39,7 +39,16 @@ public partial class AddColorDialog : Form
 
     private void btnOk_Click(object sender, EventArgs e)
     {
-        NewColorLayer = new ColorLayer(trbHighestValue.Value, txtName.Text.Trim(), (System.Drawing.Color)btnColor.Tag);
+        var name = ColorLayer.EncodeStepName(txtName.Text);
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            txtName.Focus();
+            MessageBox.Show(this, @"Please enter a name for this color layer.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        NewColorLayer = new ColorLayer(trbHighestValue.Value, name, (System.Drawing.Color)btnColor.Tag);
         DialogResult = DialogResult.OK;
     }
 
@@ -56,4 +65,7 @@ public partial class AddColorDialog : Form
         btnColor.ForeColor = x.Color.GetBrightness() < 0.5f ? System.Drawing.Color.White : System.Drawing.Color.Black;
         txtColor.Text = $@"{x.Color.R:n0}, {x.Color.G:n0}, {x.Color.B:n0}";
     }
+
+    private void txtName_Validating(object sender, System.ComponentModel.CancelEventArgs e) =>
+        txtName.Text = ColorLayer.EncodeStepName(txtName.Text);
 }

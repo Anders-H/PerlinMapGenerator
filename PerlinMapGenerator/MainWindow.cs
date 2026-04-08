@@ -10,12 +10,14 @@ namespace PerlinMapGenerator;
 
 public partial class MainWindow : Form
 {
+    private string? _filename;
     private Bitmap? _bitmap;
-    private readonly Document _document;
+    private Document _document;
     private double _zoomFactor;
 
     public MainWindow()
     {
+        _filename = null;
         _document = new Document();
         _zoomFactor = 1.0;
         InitializeComponent();
@@ -24,7 +26,13 @@ public partial class MainWindow : Form
     private void MainWindow_Load(object sender, EventArgs e)
     {
         SetPictureBoxSize();
+        UpdateWindowTitle();
     }
+
+    private void UpdateWindowTitle() =>
+        Text = string.IsNullOrWhiteSpace(_filename)
+            ? @"Perlin Map Generator"
+            : $"Perlin Map Generator - [{_filename}]";
 
     private void Render()
     {
@@ -120,7 +128,7 @@ public partial class MainWindow : Form
         picMap.Invalidate();
     }
 
-    private void toolStripButton1_Click(object sender, EventArgs e) =>
+    private void btnImageSize_Click(object sender, EventArgs e) =>
         imageSizeToolStripMenuItem_Click(sender, e);
 
     private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -237,4 +245,108 @@ public partial class MainWindow : Form
 
     private void btnEditColors_Click(object sender, EventArgs e) =>
         editColorsToolStripMenuItem_Click(sender, e);
+
+    private void newToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        if (MessageBox.Show(this, @"Are you sure you want to create a new map? All unsaved progress will be lost.", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+            return;
+
+        _document = new Document();
+        toolStripZoom100_Click(sender, e);
+        SetPictureBoxSize();
+        Render();
+        picMap.Invalidate();
+        UpdateWindowTitle();
+    }
+
+    private void btnNew_Click(object sender, EventArgs e) =>
+        newToolStripMenuItem_Click(sender, e);
+
+    private void openToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        //if (MessageBox.Show(this, @"Are you sure you want to open a map? All unsaved progress will be lost.", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+        //    return;
+
+        //Document? document = null;
+
+        //try
+        //{
+        //    var document = Document.Load();
+        //}
+        //catch (Exception exception)
+        //{
+        //    Console.WriteLine(exception);
+        //    throw;
+        //}
+
+        //if (document == null)
+        //{
+        //    if (MessageBox.Show(this, @"Are you sure you want to open a map? All unsaved progress will be lost.", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+        //        return;
+        //}
+    }
+
+    private void btnOpen_Click(object sender, EventArgs e) =>
+        openToolStripMenuItem_Click(sender, e);
+
+    private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(_filename))
+        {
+            saveAsToolStripMenuItem_Click(sender, e);
+            return;
+        }
+
+        Save(_filename!);
+    }
+
+    private void btnSave_Click(object sender, EventArgs e) =>
+        saveToolStripMenuItem_Click(sender, e);
+
+    private void Save(string filename)
+    {
+        try
+        {
+            _document.Save(filename);
+            _filename = filename;
+            UpdateWindowTitle();
+            lblStatus.Text = $@"Saved map to {filename} at {DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}.";
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(this, @$"Failed to save file as {filename}: {ex.Message}", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            lblStatus.Text = $@"Failed to save map to {filename} at {DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}.";
+        }
+    }
+
+    private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        using var x = new SaveFileDialog();
+        x.Title = @"Save map as";
+        x.Filter = @"Perlin Map files (*.pmap)|*.pmap|All files (*.*)|*.*";
+
+        if (x.ShowDialog(this) != DialogResult.OK)
+            return;
+
+        try
+        {
+            _document.Save(x.FileName);
+            _filename = x.FileName;
+            UpdateWindowTitle();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(this, @$"Failed to save file as {x.FileName}: {ex.Message}", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        using var x = new ExportDialog();
+        x.Document = _document;
+        x.ShowDialog(this);
+    }
+
+    private void exitToolStripMenuItem_Click(object sender, EventArgs e) =>
+        Close();
 }

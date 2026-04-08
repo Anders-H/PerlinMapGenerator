@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace PerlinMapGenerator.Dialogs.ColorDialogs;
 
@@ -19,7 +20,7 @@ public partial class EditColorDialog : Form
             throw new SystemException();
 
         Text = $@"Edit Color ({ColorLayer.ColorString}) - {ColorLayer.Name} at <= {ColorLayer.HighestValue}";
-        txtName.Text = ColorLayer.Name;
+        txtName.Text = ColorLayer.EncodeStepName(ColorLayer.Name);
         var color = ColorLayer.Color;
         txtColor.Text = $@"{color.R:n0}, {color.G:n0}, {color.B:n0}";
         btnColor.BackColor = color;
@@ -54,9 +55,21 @@ public partial class EditColorDialog : Form
         if (ColorLayer == null)
             throw new SystemException();
 
-        ColorLayer.Name = txtName.Text.Trim();
+        var name = ColorLayer.EncodeStepName(txtName.Text);
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            txtName.Focus();
+            MessageBox.Show(this, @"Please enter a name for this color layer.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        ColorLayer.Name = name;
         ColorLayer.Color = (System.Drawing.Color)btnColor.Tag;
         ColorLayer.HighestValue = trbHighestValue.Value;
         DialogResult = DialogResult.OK;
     }
+
+    private void txtName_Validating(object sender, System.ComponentModel.CancelEventArgs e) =>
+        txtName.Text = ColorLayer.EncodeStepName(txtName.Text);
 }

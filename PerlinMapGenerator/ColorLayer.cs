@@ -18,9 +18,20 @@ public class ColorLayer
         Color = color;
     }
 
+    public ColorLayer(ColorLayer original)
+    {
+        HighestValue = original.HighestValue;
+        HighestValueFloat = HighestValue / 100f;
+        Name = original.Name;
+        Color = original.Color;
+    }
+
     public override string ToString() =>
         $"{Name}: {HighestValueFloat:n2}";
 
     public string ColorString =>
         $@"{Color.R:n0}, {Color.G:n0}, {Color.B:n0}";
+
+    public static string EncodeStepName(string name) =>
+        name.Replace("|", "").Replace(";", "").Replace("=", "").Replace(",", "").Replace("  ", " ").Replace("[", "").Replace("]", "").Trim();
 }
