@@ -344,7 +344,9 @@ public partial class MainWindow : Form
     {
         using var x = new ExportDialog();
         x.Document = _document;
-        x.ShowDialog(this);
+
+        if (x.ShowDialog(this) != DialogResult.OK)
+            return;
     }
 
     private void exitToolStripMenuItem_Click(object sender, EventArgs e) =>
