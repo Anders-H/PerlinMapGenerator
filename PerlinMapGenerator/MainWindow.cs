@@ -264,26 +264,44 @@ public partial class MainWindow : Form
 
     private void openToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        //if (MessageBox.Show(this, @"Are you sure you want to open a map? All unsaved progress will be lost.", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
-        //    return;
+        if (MessageBox.Show(this, @"Are you sure you want to open a map? All unsaved progress will be lost.", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+            return;
 
-        //Document? document = null;
+        var x = new OpenFileDialog();
+        x.Title = @"Open map";
+        x.Filter = @"Perlin Map files (*.pmap)|*.pmap|All files (*.*)|*.*";
 
-        //try
-        //{
-        //    var document = Document.Load();
-        //}
-        //catch (Exception exception)
-        //{
-        //    Console.WriteLine(exception);
-        //    throw;
-        //}
+        if (x.ShowDialog(this) != DialogResult.OK)
+                return;
 
-        //if (document == null)
-        //{
-        //    if (MessageBox.Show(this, @"Are you sure you want to open a map? All unsaved progress will be lost.", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
-        //        return;
-        //}
+        var filename = x.FileName;
+        Document? document = null;
+        string? message = null;
+
+        try
+        {
+            document = Document.Load(filename, out message);
+        }
+        catch (Exception exception)
+        {
+            MessageBox.Show(this, exception.Message, @"Load failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        if (document == null)
+        {
+            MessageBox.Show(this, @"Failed to load map. The file you selected is not a correct map file.", @"Load failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        if (MessageBox.Show(this, $@"Are you sure you want to open a map? All unsaved progress will be lost. {message}".Trim(), Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+            return;
+
+        _document = document!;
+        toolStripZoom100_Click(sender, e);
+        SetPictureBoxSize();
+        Render();
+        picMap.Invalidate();
+        UpdateWindowTitle();
     }
 
     private void btnOpen_Click(object sender, EventArgs e) =>
@@ -343,10 +361,29 @@ public partial class MainWindow : Form
     private void exportToolStripMenuItem_Click(object sender, EventArgs e)
     {
         using var x = new ExportDialog();
-        x.Document = _document;
 
         if (x.ShowDialog(this) != DialogResult.OK)
             return;
+
+        var format = x.Format;
+
+        switch (format)
+        {
+            case ExportFormat.Bmp:
+                // Export as BMP
+                break;
+            case ExportFormat.Png:
+                // Export as PNG
+                break;
+            case ExportFormat.Json:
+                // Export as JSON
+                break;
+            case ExportFormat.Cs:
+                // Export as C#
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 
     private void exitToolStripMenuItem_Click(object sender, EventArgs e) =>

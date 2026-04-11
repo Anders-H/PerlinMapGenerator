@@ -79,4 +79,9 @@ public class Document
             throw new SystemException($"Failed to construct data file: {message}");
         }
     }
+
+    public static Document? Load(string filePath, out string message)
+    {
+
+    }
 }

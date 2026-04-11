@@ -2,7 +2,8 @@
 
 public enum ExportFormat
 {
-    Png,
     Bmp,
-    Json
+    Png,
+    Json,
+    Cs
 }
