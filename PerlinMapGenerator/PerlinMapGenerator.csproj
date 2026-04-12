@@ -40,8 +40,8 @@
     <ApplicationIcon>landscape.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IniParser, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WinSoftIniParser.1.0.0\lib\netstandard2.0\IniParser.dll</HintPath>
+    <Reference Include="IniParser, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WinSoftIniParser.1.1.0\lib\netstandard2.0\IniParser.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.dll</HintPath>

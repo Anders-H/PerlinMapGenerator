@@ -82,6 +82,21 @@ public class Document
 
     public static Document? Load(string filePath, out string message)
     {
+        message = "";
+        var fileContents = File.ReadAllText(filePath);
+        var parser = new Parser(fileContents);
+        var success = parser.TryParse(out var parserMessage, out var iniFile);
 
+        if (!success)
+        {
+            message = parserMessage;
+            return null;
+        }
+
+        
+
+        var document = new Document();
+
+        return document;
     }
 }
