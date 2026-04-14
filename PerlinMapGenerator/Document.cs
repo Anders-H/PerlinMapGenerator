@@ -1,8 +1,10 @@
 ﻿#nullable enable
 using System;
+using System.Data.Odbc;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using IniParser;
 
@@ -10,6 +12,8 @@ namespace PerlinMapGenerator;
 
 public class Document
 {
+    private const string ExpectedFileType = "Perlin Map File (WinSoft)";
+    private const string ExpectedVersion = "1.0";
     public int Width { get; set; }
     public int Height { get; set; }
     public float Scale { get; set; }
@@ -47,8 +51,8 @@ public class Document
     {
         var raw = new StringBuilder();
         raw.AppendLine("[File Version]");
-        raw.AppendLine("File Type = Perlin Map File (WinSoft)");
-        raw.AppendLine("Version = 1.0");
+        raw.AppendLine($"File Type = {ExpectedFileType}");
+        raw.AppendLine($"Version = {ExpectedVersion}");
         raw.AppendLine("[Perlin Settings]");
         raw.AppendLine($"Width = {Width}");
         raw.AppendLine($"Height = {Height}");
@@ -93,10 +97,116 @@ public class Document
             return null;
         }
 
-        
+        var fileType = iniFile.GetValue("File Version", "File Type");
+        var version = iniFile.GetValue("File Version", "Version");
 
-        var document = new Document();
+        if (fileType == null || version == null)
+        {
+            message = "Invalid file type (code 11).";
+            return null;
+        }
 
-        return document;
+        if (fileType.SettingValue != ExpectedFileType || version.SettingValue != ExpectedVersion)
+        {
+            message = "Invalid file type (code 12).";
+            return null;
+        }
+
+        var widthString = iniFile.GetValue("Perlin Settings", "Width")?.SettingValue ?? "";
+        var heightString = iniFile.GetValue("Perlin Settings", "Height")?.SettingValue ?? "";
+        var octavesString = iniFile.GetValue("Perlin Settings", "Octaves")?.SettingValue ?? "";
+        var seedString = iniFile.GetValue("Perlin Settings", "Seed")?.SettingValue ?? "";
+        var scaleString = iniFile.GetValue("Perlin Settings", "Scale")?.SettingValue ?? "";
+        var persistenceString = iniFile.GetValue("Perlin Settings", "Persistence")?.SettingValue ?? "";
+        var lacunarityString = iniFile.GetValue("Perlin Settings", "Lacunarity")?.SettingValue ?? "";
+
+        if (!(int.TryParse(widthString, out var width) && int.TryParse(heightString, out var height) && int.TryParse(octavesString, out var octaves) && int.TryParse(seedString, out var seed) && float.TryParse(scaleString, NumberStyles.Float, CultureInfo.InvariantCulture, out var scale) && float.TryParse(persistenceString, NumberStyles.Float, CultureInfo.InvariantCulture, out var persistence) && float.TryParse(lacunarityString, NumberStyles.Float, CultureInfo.InvariantCulture, out var lacunarity)))
+        {
+            message = "Failed to parse one or more Perlin settings (code 13).";
+            return null;
+        }
+
+        var colors = iniFile.GetValuesOnly("Color Layers");
+
+        if (colors.Count < 2)
+        {
+            message = "Failed to parse color layers (code 14).";
+            return null;
+        }
+
+        var document = new Document
+        {
+            Width = width,
+            Height = height,
+            Octaves = octaves,
+            Seed = seed,
+            Scale = scale,
+            Persistence = persistence,
+            Lacunarity = lacunarity
+        };
+
+        foreach (var color in colors.Where(color => !string.IsNullOrWhiteSpace(color)))
+        {
+            var colorLayer = ColorLayer.Parse(color);
+
+            if (colorLayer == null)
+            {
+                message = "Failed to parse color layers (code 15).";
+                return null;
+            }
+
+            document.ColorLayers.Add(colorLayer);
+        }
+
+        return !document.Check(out message) ? null : document;
+    }
+
+    private bool Check(out string message)
+    {
+        message = "";
+
+        if (Width is < 32 or > 512)
+        {
+            message = "Width must be 32 to 512.";
+            return false;
+        }
+
+        if (Height is < 32 or > 512)
+        {
+            message = "Height must be 32 to 512.";
+            return false;
+        }
+
+        if (Scale is < 10 or > 150)
+        {
+            message = "Scale must be 10 to 150.";
+            return false;
+        }
+
+        if (Octaves is < 1 or > 20)
+        {
+            message = "Octaves must be 1 to 20.";
+            return false;
+        }
+
+        if (Persistence is < 1f or > 100f)
+        {
+            message = "Persistence must be 1.0 to 100.0.";
+            return false;
+        }
+
+        if (Lacunarity is < 1f or > 50f)
+        {
+            message = "Lacunarity must be 1.0 to 50.0.";
+            return false;
+        }
+
+        if (ColorLayers.Count < 2)
+        {
+            message = "At least two color layers are required.";
+            return false;
+        }
+
+        return true;
     }
 }

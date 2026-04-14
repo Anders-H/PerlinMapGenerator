@@ -34,4 +34,9 @@ public class ColorLayer
 
     public static string EncodeStepName(string name) =>
         name.Replace("|", "").Replace(";", "").Replace("=", "").Replace(",", "").Replace("  ", " ").Replace("[", "").Replace("]", "").Trim();
+
+    public static ColorLayer? Parse(string color)
+    {
+
+    }
 }
