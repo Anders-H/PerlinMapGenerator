@@ -1,6 +1,5 @@
 ﻿#nullable enable
 using System;
-using System.Data.Odbc;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -144,6 +143,8 @@ public class Document
             Persistence = persistence,
             Lacunarity = lacunarity
         };
+
+        document.ColorLayers.Clear();
 
         foreach (var color in colors.Where(color => !string.IsNullOrWhiteSpace(color)))
         {

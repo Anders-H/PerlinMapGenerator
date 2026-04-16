@@ -6,7 +6,7 @@ namespace PerlinMapGenerator.Dialogs.ColorDialogs;
 
 public partial class AddColorDialog : Form
 {
-    private static readonly Random Random;
+    public static readonly Random Random;
     public ColorLayer? NewColorLayer { get; private set; }
 
     static AddColorDialog()

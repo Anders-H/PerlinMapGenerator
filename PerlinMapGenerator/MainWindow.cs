@@ -275,8 +275,8 @@ public partial class MainWindow : Form
                 return;
 
         var filename = x.FileName;
-        Document? document = null;
-        string? message = null;
+        Document? document;
+        string? message;
 
         try
         {
@@ -290,13 +290,12 @@ public partial class MainWindow : Form
 
         if (document == null)
         {
-            MessageBox.Show(this, @"Failed to load map. The file you selected is not a correct map file.", @"Load failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(this, $@"Failed to load map. The file you selected is not a correct map file. {message}".Trim(), @"Load failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
         }
 
-        if (MessageBox.Show(this, $@"Are you sure you want to open a map? All unsaved progress will be lost. {message}".Trim(), Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
-            return;
-
         _document = document!;
+        _filename = filename;
         toolStripZoom100_Click(sender, e);
         SetPictureBoxSize();
         Render();

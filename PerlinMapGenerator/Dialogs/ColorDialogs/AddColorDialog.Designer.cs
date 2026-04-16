@@ -98,6 +98,7 @@
             // 
             this.trbHighestValue.Location = new System.Drawing.Point(8, 120);
             this.trbHighestValue.Maximum = 100;
+            this.trbHighestValue.Minimum = 1;
             this.trbHighestValue.Name = "trbHighestValue";
             this.trbHighestValue.Size = new System.Drawing.Size(228, 45);
             this.trbHighestValue.TabIndex = 7;
