@@ -34,12 +34,14 @@ public partial class MapAttributesDialog : Form
 
     private void btnApply_Click(object sender, EventArgs e)
     {
+        ((MainWindow)Parent).PushState(Document);
         CopyToDocument();
         ApplyDelegate?.Invoke();
     }
 
     private void btnOk_Click(object sender, EventArgs e)
     {
+        ((MainWindow)Parent).PushState(Document);
         CopyToDocument();
         DialogResult = DialogResult.OK;
     }

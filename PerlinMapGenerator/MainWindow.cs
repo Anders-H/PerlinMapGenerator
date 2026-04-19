@@ -10,6 +10,7 @@ namespace PerlinMapGenerator;
 
 public partial class MainWindow : Form
 {
+    private UndoBuffer _undoBuffer;
     private string? _filename;
     private Bitmap? _bitmap;
     private Document _document;
@@ -17,6 +18,7 @@ public partial class MainWindow : Form
 
     public MainWindow()
     {
+        _undoBuffer = new UndoBuffer();
         _filename = null;
         _document = new Document();
         _zoomFactor = 1.0;
@@ -238,6 +240,7 @@ public partial class MainWindow : Form
         using var x = new ColorsDialog();
         x.Document = _document;
         x.ApplyDelegate = ApplyChanges;
+        x.PushStateDelegate = _undoBuffer.PushState;
 
         if (x.ShowDialog(this) == DialogResult.OK)
             ApplyChanges();
@@ -251,6 +254,7 @@ public partial class MainWindow : Form
         if (MessageBox.Show(this, @"Are you sure you want to create a new map? All unsaved progress will be lost.", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
             return;
 
+        _undoBuffer = new UndoBuffer();
         _document = new Document();
         toolStripZoom100_Click(sender, e);
         SetPictureBoxSize();
@@ -294,6 +298,7 @@ public partial class MainWindow : Form
             return;
         }
 
+        _undoBuffer = new UndoBuffer();
         _document = document!;
         _filename = filename;
         toolStripZoom100_Click(sender, e);
@@ -387,4 +392,52 @@ public partial class MainWindow : Form
 
     private void exitToolStripMenuItem_Click(object sender, EventArgs e) =>
         Close();
+
+    private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        var state = _undoBuffer.DoUndo();
+
+        if (state == null)
+        {
+            MessageBox.Show(this, @"Cannot undo at current state.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        _document.Set(state);
+        SetPictureBoxSize();
+        Render();
+        picMap.Invalidate();
+    }
+
+    private void btnUndo_Click(object sender, EventArgs e) =>
+        undoToolStripMenuItem_Click(sender, e);
+
+    private void redoToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        var state = _undoBuffer.DoRedo();
+
+        if (state == null)
+        {
+            MessageBox.Show(this, @"Cannot redo at current state.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        _document.Set(state);
+        SetPictureBoxSize();
+        Render();
+        picMap.Invalidate();
+    }
+
+    private void btnRedo_Click(object sender, EventArgs e) =>
+        redoToolStripMenuItem_Click(sender, e);
+
+    public void PushState(Document? document)
+    {
+        if (document == null)
+            return;
+
+        var state = new Document();
+        state.Set(document);
+        _undoBuffer.PushState(state);
+    }
 }

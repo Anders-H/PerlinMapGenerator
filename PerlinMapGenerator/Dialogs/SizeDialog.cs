@@ -59,6 +59,7 @@ public partial class SizeDialog : Form
         if (Document == null)
             throw new SystemException();
 
+        ((MainWindow)Parent).PushState(Document);
         var width = ParseValue(txtWidth.Text, Document.Width);
         var height = ParseValue(txtHeight.Text, Document.Height);
         Document.Width = width;

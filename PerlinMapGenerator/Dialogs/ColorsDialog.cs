@@ -12,6 +12,7 @@ public partial class ColorsDialog : Form
     private ColorLayerList ColorLayers { get; }
     public Document? Document { get; set; }
     public Action? ApplyDelegate { get; set; }
+    public Action<Document>? PushStateDelegate { get; set; }
 
     public ColorsDialog()
     {
@@ -21,7 +22,7 @@ public partial class ColorsDialog : Form
 
     private void ColorsDialog_Load(object sender, EventArgs e)
     {
-        if (Document == null || ApplyDelegate == null)
+        if (Document == null || ApplyDelegate == null || PushStateDelegate == null)
             throw new SystemException();
 
         Document.SortColorLayers();
@@ -142,6 +143,7 @@ public partial class ColorsDialog : Form
 
     private void btnApply_Click(object sender, EventArgs e)
     {
+        PushStateDelegate!.Invoke(Document!);
         RebuildColorLayers();
         ApplyDelegate?.Invoke();
 
@@ -151,6 +153,7 @@ public partial class ColorsDialog : Form
 
     private void btnOk_Click(object sender, EventArgs e)
     {
+        PushStateDelegate!.Invoke(Document!);
         RebuildColorLayers();
         ApplyDelegate?.Invoke();
 

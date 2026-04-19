@@ -34,22 +34,27 @@
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.propertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.colorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.picMap = new System.Windows.Forms.PictureBox();
             this.btnNew = new System.Windows.Forms.ToolStripButton();
             this.btnOpen = new System.Windows.Forms.ToolStripButton();
+            this.btnSave = new System.Windows.Forms.ToolStripButton();
+            this.btnUndo = new System.Windows.Forms.ToolStripButton();
+            this.btnRedo = new System.Windows.Forms.ToolStripButton();
             this.btnImageSize = new System.Windows.Forms.ToolStripButton();
             this.btnMapAttributes = new System.Windows.Forms.ToolStripButton();
             this.btnZoomOut = new System.Windows.Forms.ToolStripButton();
@@ -59,6 +64,8 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageSizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mapAttributesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,7 +75,6 @@
             this.toolStripZoom200 = new System.Windows.Forms.ToolStripMenuItem();
             this.editColorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnSave = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -80,6 +86,7 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
+            this.editToolStripMenuItem,
             this.propertiesToolStripMenuItem,
             this.viewToolStripMenuItem,
             this.colorsToolStripMenuItem,
@@ -108,19 +115,26 @@
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(138, 6);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.saveAsToolStripMenuItem.Text = "Save as...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(138, 6);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // propertiesToolStripMenuItem
             // 
@@ -163,6 +177,9 @@
             this.toolStripSeparator4,
             this.btnOpen,
             this.btnSave,
+            this.toolStripSeparator5,
+            this.btnUndo,
+            this.btnRedo,
             this.toolStripSeparator3,
             this.btnImageSize,
             this.btnMapAttributes,
@@ -176,6 +193,11 @@
             this.toolStrip1.Size = new System.Drawing.Size(800, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripSeparator3
             // 
@@ -220,17 +242,19 @@
             this.panel1.TabIndex = 3;
             this.panel1.Resize += new System.EventHandler(this.panel1_Resize);
             // 
-            // exitToolStripMenuItem
+            // editToolStripMenuItem
             // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.undoToolStripMenuItem,
+            this.redoToolStripMenuItem});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Text = "&Edit";
             // 
-            // toolStripSeparator4
+            // toolStripSeparator5
             // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
             // 
             // picMap
             // 
@@ -261,6 +285,36 @@
             this.btnOpen.Size = new System.Drawing.Size(23, 22);
             this.btnOpen.Text = "Open...";
             this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
+            // 
+            // btnSave
+            // 
+            this.btnSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnSave.Image = global::PerlinMapGenerator.Properties.Resources.saveHS;
+            this.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(23, 22);
+            this.btnSave.Text = "Save";
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // btnUndo
+            // 
+            this.btnUndo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnUndo.Image = global::PerlinMapGenerator.Properties.Resources._112_ArrowReturnLeft_Blue_16x16_72;
+            this.btnUndo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnUndo.Name = "btnUndo";
+            this.btnUndo.Size = new System.Drawing.Size(23, 22);
+            this.btnUndo.Text = "Undo";
+            this.btnUndo.Click += new System.EventHandler(this.btnUndo_Click);
+            // 
+            // btnRedo
+            // 
+            this.btnRedo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnRedo.Image = global::PerlinMapGenerator.Properties.Resources._112_ArrowReturnRight_Blue_16x16_72;
+            this.btnRedo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRedo.Name = "btnRedo";
+            this.btnRedo.Size = new System.Drawing.Size(23, 22);
+            this.btnRedo.Text = "Redo";
+            this.btnRedo.Click += new System.EventHandler(this.btnRedo_Click);
             // 
             // btnImageSize
             // 
@@ -317,7 +371,7 @@
             this.newToolStripMenuItem.Image = global::PerlinMapGenerator.Properties.Resources.NewDocumentHS;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -325,7 +379,7 @@
             // 
             this.openToolStripMenuItem.Image = global::PerlinMapGenerator.Properties.Resources.openHS;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.openToolStripMenuItem.Text = "Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -334,7 +388,7 @@
             this.saveToolStripMenuItem.Image = global::PerlinMapGenerator.Properties.Resources.saveHS;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
@@ -342,15 +396,31 @@
             // 
             this.exportToolStripMenuItem.Image = global::PerlinMapGenerator.Properties.Resources.export16;
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.exportToolStripMenuItem.Text = "Export...";
             this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
+            // 
+            // undoToolStripMenuItem
+            // 
+            this.undoToolStripMenuItem.Image = global::PerlinMapGenerator.Properties.Resources._112_ArrowReturnLeft_Blue_16x16_72;
+            this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.undoToolStripMenuItem.Text = "Undo";
+            this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
+            // 
+            // redoToolStripMenuItem
+            // 
+            this.redoToolStripMenuItem.Image = global::PerlinMapGenerator.Properties.Resources._112_ArrowReturnRight_Blue_16x16_72;
+            this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
+            this.redoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.redoToolStripMenuItem.Text = "Redo";
+            this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
             // 
             // imageSizeToolStripMenuItem
             // 
             this.imageSizeToolStripMenuItem.Image = global::PerlinMapGenerator.Properties.Resources.CanvasScaleHS;
             this.imageSizeToolStripMenuItem.Name = "imageSizeToolStripMenuItem";
-            this.imageSizeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.imageSizeToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.imageSizeToolStripMenuItem.Text = "Image size...";
             this.imageSizeToolStripMenuItem.Click += new System.EventHandler(this.imageSizeToolStripMenuItem_Click);
             // 
@@ -358,7 +428,7 @@
             // 
             this.mapAttributesToolStripMenuItem.Image = global::PerlinMapGenerator.Properties.Resources.PropertiesHS;
             this.mapAttributesToolStripMenuItem.Name = "mapAttributesToolStripMenuItem";
-            this.mapAttributesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mapAttributesToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.mapAttributesToolStripMenuItem.Text = "Map attributes...";
             this.mapAttributesToolStripMenuItem.Click += new System.EventHandler(this.mapAttributesToolStripMenuItem_Click);
             // 
@@ -371,20 +441,20 @@
             this.toolStripZoom200});
             this.zoomToolStripMenuItem.Image = global::PerlinMapGenerator.Properties.Resources.ZoomHS;
             this.zoomToolStripMenuItem.Name = "zoomToolStripMenuItem";
-            this.zoomToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.zoomToolStripMenuItem.Size = new System.Drawing.Size(106, 22);
             this.zoomToolStripMenuItem.Text = "Zoom";
             // 
             // toolStripZoom25
             // 
             this.toolStripZoom25.Name = "toolStripZoom25";
-            this.toolStripZoom25.Size = new System.Drawing.Size(180, 22);
+            this.toolStripZoom25.Size = new System.Drawing.Size(102, 22);
             this.toolStripZoom25.Text = "25%";
             this.toolStripZoom25.Click += new System.EventHandler(this.toolStripZoom25_Click);
             // 
             // toolStripZoom50
             // 
             this.toolStripZoom50.Name = "toolStripZoom50";
-            this.toolStripZoom50.Size = new System.Drawing.Size(180, 22);
+            this.toolStripZoom50.Size = new System.Drawing.Size(102, 22);
             this.toolStripZoom50.Text = "50%";
             this.toolStripZoom50.Click += new System.EventHandler(this.toolStripZoom50_Click);
             // 
@@ -393,14 +463,14 @@
             this.toolStripZoom100.Checked = true;
             this.toolStripZoom100.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripZoom100.Name = "toolStripZoom100";
-            this.toolStripZoom100.Size = new System.Drawing.Size(180, 22);
+            this.toolStripZoom100.Size = new System.Drawing.Size(102, 22);
             this.toolStripZoom100.Text = "100%";
             this.toolStripZoom100.Click += new System.EventHandler(this.toolStripZoom100_Click);
             // 
             // toolStripZoom200
             // 
             this.toolStripZoom200.Name = "toolStripZoom200";
-            this.toolStripZoom200.Size = new System.Drawing.Size(180, 22);
+            this.toolStripZoom200.Size = new System.Drawing.Size(102, 22);
             this.toolStripZoom200.Text = "200%";
             this.toolStripZoom200.Click += new System.EventHandler(this.toolStripZoom200_Click);
             // 
@@ -408,7 +478,7 @@
             // 
             this.editColorsToolStripMenuItem.Image = global::PerlinMapGenerator.Properties.Resources.ColorHS;
             this.editColorsToolStripMenuItem.Name = "editColorsToolStripMenuItem";
-            this.editColorsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.editColorsToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.editColorsToolStripMenuItem.Text = "Edit colors...";
             this.editColorsToolStripMenuItem.Click += new System.EventHandler(this.editColorsToolStripMenuItem_Click);
             // 
@@ -417,19 +487,9 @@
             this.aboutToolStripMenuItem.Image = global::PerlinMapGenerator.Properties.Resources.Help;
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.aboutToolStripMenuItem.Text = "About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-            // 
-            // btnSave
-            // 
-            this.btnSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnSave.Image = global::PerlinMapGenerator.Properties.Resources.saveHS;
-            this.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(23, 22);
-            this.btnSave.Text = "Save";
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // MainWindow
             // 
@@ -503,6 +563,12 @@
         private System.Windows.Forms.ToolStripButton btnOpen;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton btnSave;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripButton btnUndo;
+        private System.Windows.Forms.ToolStripButton btnRedo;
     }
 }
 

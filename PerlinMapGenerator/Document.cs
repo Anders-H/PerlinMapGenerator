@@ -43,6 +43,21 @@ public class Document
         ];
     }
 
+    public void Set(Document document)
+    {
+        Width = document.Width;
+        Height = document.Height;
+        Scale = document.Scale;
+        Octaves = document.Octaves;
+        Persistence = document.Persistence;
+        Lacunarity = document.Lacunarity;
+        Seed = document.Seed;
+        ColorLayers.Clear();
+
+        foreach (var layer in document.ColorLayers)
+            ColorLayers.Add(new ColorLayer(layer));
+    }
+
     public void SortColorLayers() =>
         ColorLayers.SortColorLayers();
 
