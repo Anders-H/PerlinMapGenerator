@@ -117,7 +117,7 @@ public partial class MainWindow : Form
     {
         using var x = new SizeDialog();
         x.Document = _document;
-        x.PushStateDelegate = PushState;
+        x.PushStateDelegate = _undoBuffer.PushState;
 
         if (x.ShowDialog(this) == DialogResult.OK)
         {
@@ -146,7 +146,7 @@ public partial class MainWindow : Form
         using var x = new MapAttributesDialog();
         x.Document = _document;
         x.ApplyDelegate = ApplyChanges;
-        x.PushStateDelegate = PushState;
+        x.PushStateDelegate = _undoBuffer.PushState;
         
         if (x.ShowDialog(this) == DialogResult.OK)
             ApplyChanges();
@@ -243,7 +243,7 @@ public partial class MainWindow : Form
         using var x = new ColorsDialog();
         x.Document = _document;
         x.ApplyDelegate = ApplyChanges;
-        x.PushStateDelegate = PushState;
+        x.PushStateDelegate = _undoBuffer.PushState;
 
         if (x.ShowDialog(this) == DialogResult.OK)
             ApplyChanges();
@@ -435,12 +435,4 @@ public partial class MainWindow : Form
 
     private void btnRedo_Click(object sender, EventArgs e) =>
         redoToolStripMenuItem_Click(sender, e);
-
-    public void PushState(Document? document)
-    {
-        if (document == null)
-            return;
-
-        _undoBuffer.PushState(document);
-    }
 }

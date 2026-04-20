@@ -112,7 +112,7 @@ public partial class ColorsDialog : Form
             if (otherLayer == null)
                 continue;
 
-            if (otherLayer == colorLayer)
+            if (otherLayer != colorLayer)
                 continue;
 
             listView1.SelectedItems.Clear();
