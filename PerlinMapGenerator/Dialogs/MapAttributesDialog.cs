@@ -8,6 +8,7 @@ public partial class MapAttributesDialog : Form
 {
     public Document? Document { get; set; }
     public Action? ApplyDelegate { get; set; }
+    public Action<Document>? PushStateDelegate { get; set; }
 
     public MapAttributesDialog()
     {
@@ -16,7 +17,7 @@ public partial class MapAttributesDialog : Form
 
     private void MapAttributesDialog_Load(object sender, EventArgs e)
     {
-        if (Document == null || ApplyDelegate == null)
+        if (Document == null || ApplyDelegate == null || PushStateDelegate == null)
             throw new SystemException();
 
         trbScale.Value = (int)Document.Scale;
@@ -34,16 +35,16 @@ public partial class MapAttributesDialog : Form
 
     private void btnApply_Click(object sender, EventArgs e)
     {
-        ((MainWindow)Parent).PushState(Document);
         CopyToDocument();
         ApplyDelegate?.Invoke();
+        PushStateDelegate?.Invoke(Document!);
     }
 
     private void btnOk_Click(object sender, EventArgs e)
     {
-        ((MainWindow)Parent).PushState(Document);
         CopyToDocument();
         DialogResult = DialogResult.OK;
+        PushStateDelegate?.Invoke(Document!);
     }
 
     private void CopyToDocument()

@@ -8,6 +8,7 @@ namespace PerlinMapGenerator.Dialogs;
 public partial class SizeDialog : Form
 {
     public Document? Document { get; set; }
+    public Action<Document>? PushStateDelegate { get; set; }
 
     public SizeDialog()
     {
@@ -16,7 +17,7 @@ public partial class SizeDialog : Form
 
     private void SizeDialog_Load(object sender, EventArgs e)
     {
-        if (Document == null)
+        if (Document == null || PushStateDelegate == null)
             throw new SystemException();
 
         txtWidth.Text = Document.Width.ToString();
@@ -59,11 +60,11 @@ public partial class SizeDialog : Form
         if (Document == null)
             throw new SystemException();
 
-        ((MainWindow)Parent).PushState(Document);
         var width = ParseValue(txtWidth.Text, Document.Width);
         var height = ParseValue(txtHeight.Text, Document.Height);
         Document.Width = width;
         Document.Height = height;
+        PushStateDelegate?.Invoke(Document);
         DialogResult = DialogResult.OK;
     }
 }

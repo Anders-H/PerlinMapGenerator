@@ -94,6 +94,7 @@ public partial class ColorsDialog : Form
         using var x = new EditColorDialog();
         x.ColorLayer = (ColorLayer)listView1.SelectedItems[0].Tag;
         x.ShowDialog(this);
+        ColorLayers.SortColorLayers();
         RebuildForm();
         FindColorLayer(x.ColorLayer);
         pictureBox1.Invalidate();
@@ -143,9 +144,9 @@ public partial class ColorsDialog : Form
 
     private void btnApply_Click(object sender, EventArgs e)
     {
-        PushStateDelegate!.Invoke(Document!);
         RebuildColorLayers();
         ApplyDelegate?.Invoke();
+        PushStateDelegate!.Invoke(Document!);
 
         if (ColorLayers.Count < 2)
             MessageBox.Show(this, @"You must have at least 2 colors registered.", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -153,9 +154,9 @@ public partial class ColorsDialog : Form
 
     private void btnOk_Click(object sender, EventArgs e)
     {
-        PushStateDelegate!.Invoke(Document!);
         RebuildColorLayers();
         ApplyDelegate?.Invoke();
+        PushStateDelegate!.Invoke(Document!);
 
         if (ColorLayers.Count < 2)
         {

@@ -21,6 +21,7 @@ public partial class MainWindow : Form
         _undoBuffer = new UndoBuffer();
         _filename = null;
         _document = new Document();
+        _undoBuffer.PushState(_document);
         _zoomFactor = 1.0;
         InitializeComponent();
     }
@@ -116,6 +117,7 @@ public partial class MainWindow : Form
     {
         using var x = new SizeDialog();
         x.Document = _document;
+        x.PushStateDelegate = PushState;
 
         if (x.ShowDialog(this) == DialogResult.OK)
         {
@@ -144,6 +146,7 @@ public partial class MainWindow : Form
         using var x = new MapAttributesDialog();
         x.Document = _document;
         x.ApplyDelegate = ApplyChanges;
+        x.PushStateDelegate = PushState;
         
         if (x.ShowDialog(this) == DialogResult.OK)
             ApplyChanges();
@@ -240,7 +243,7 @@ public partial class MainWindow : Form
         using var x = new ColorsDialog();
         x.Document = _document;
         x.ApplyDelegate = ApplyChanges;
-        x.PushStateDelegate = _undoBuffer.PushState;
+        x.PushStateDelegate = PushState;
 
         if (x.ShowDialog(this) == DialogResult.OK)
             ApplyChanges();
@@ -261,6 +264,7 @@ public partial class MainWindow : Form
         Render();
         picMap.Invalidate();
         UpdateWindowTitle();
+        _undoBuffer.PushState(_document);
     }
 
     private void btnNew_Click(object sender, EventArgs e) =>
@@ -306,6 +310,7 @@ public partial class MainWindow : Form
         Render();
         picMap.Invalidate();
         UpdateWindowTitle();
+        _undoBuffer.PushState(_document);
     }
 
     private void btnOpen_Click(object sender, EventArgs e) =>
