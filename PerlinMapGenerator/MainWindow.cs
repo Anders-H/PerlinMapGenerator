@@ -441,8 +441,6 @@ public partial class MainWindow : Form
         if (document == null)
             return;
 
-        var state = new Document();
-        state.Set(document);
-        _undoBuffer.PushState(state);
+        _undoBuffer.PushState(document);
     }
 }
