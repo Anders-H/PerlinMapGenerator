@@ -97,6 +97,7 @@
     <Compile Include="ExportDialog.Designer.cs">
       <DependentUpon>ExportDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Exporter.cs" />
     <Compile Include="ExportFormat.cs" />
     <Compile Include="FastBitmap.cs" />
     <Compile Include="MainWindow.cs">

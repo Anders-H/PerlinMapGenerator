@@ -4,6 +4,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace PerlinMapGenerator;
@@ -147,7 +148,7 @@ public partial class MainWindow : Form
         x.Document = _document;
         x.ApplyDelegate = ApplyChanges;
         x.PushStateDelegate = _undoBuffer.PushState;
-        
+
         if (x.ShowDialog(this) == DialogResult.OK)
             ApplyChanges();
     }
@@ -280,7 +281,7 @@ public partial class MainWindow : Form
         x.Filter = @"Perlin Map files (*.pmap)|*.pmap|All files (*.*)|*.*";
 
         if (x.ShowDialog(this) != DialogResult.OK)
-                return;
+            return;
 
         var filename = x.FileName;
         Document? document;
@@ -376,22 +377,63 @@ public partial class MainWindow : Form
 
         var format = x.Format;
 
-        switch (format)
+        try
         {
-            case ExportFormat.Bmp:
-                // Export as BMP
-                break;
-            case ExportFormat.Png:
-                // Export as PNG
-                break;
-            case ExportFormat.Json:
-                // Export as JSON
-                break;
-            case ExportFormat.Cs:
-                // Export as C#
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
+            switch (format)
+            {
+                case ExportFormat.Bmp:
+                {
+                    using var sd = new SaveFileDialog();
+                    sd.Filter = @"Bitmap files (*.bmp)|*.bmp|All files (*.*)|*.*";
+                    sd.Title = @"Export BMP image";
+
+                    if (x.ShowDialog(this) != DialogResult.OK)
+                        return;
+
+                    Exporter.ExportBmp(_document, sd.FileName);
+                    break;
+                }
+                case ExportFormat.Png:
+                {
+                    using var sd = new SaveFileDialog();
+                    sd.Filter = @"PNG files (*.png)|*.png|All files (*.*)|*.*";
+                    sd.Title = @"Export PNG image";
+
+                    if (x.ShowDialog(this) != DialogResult.OK)
+                        return;
+
+                    Exporter.ExportPng(_document, sd.FileName);
+                    break;
+                }
+                case ExportFormat.Json:
+                {
+                    using var sd = new SaveFileDialog();
+                    sd.Filter = @"JSON files (*.json)|*.json|All files (*.*)|*.*";
+                    sd.Title = @"Export JSON file";
+
+                    if (x.ShowDialog(this) != DialogResult.OK)
+                        return;
+
+                    Exporter.ExportJson(_document, sd.FileName);
+                    break;
+                }
+                case ExportFormat.Cs:
+                {
+                    using var sd = new SaveFileDialog();
+                    sd.Filter = @"C# files (*.cs)|*.cs|All files (*.*)|*.*";
+                    sd.Title = @"Export C# file";
+
+                    if (x.ShowDialog(this) != DialogResult.OK)
+                        return;
+
+                    Exporter.ExportCs(_document, sd.FileName);
+                    break;
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            MessageBox.Show(this, $@"Export failed: {exception.Message}", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
