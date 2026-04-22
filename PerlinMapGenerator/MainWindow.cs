@@ -68,7 +68,7 @@ public partial class MainWindow : Form
             var fastBitmap = new FastBitmap(_bitmap);
             var perlinNoiseGenerator = new PerlinNoiseGenerator();
             fastBitmap.Lock(FastBitmapLockFormat.Format32bppRgb);
-            perlinNoiseGenerator.Render(fastBitmap, _document);
+            perlinNoiseGenerator.RenderToBitmap(fastBitmap, _document);
             fastBitmap.Unlock();
         }
         catch (Exception ex)
@@ -387,10 +387,11 @@ public partial class MainWindow : Form
                     sd.Filter = @"Bitmap files (*.bmp)|*.bmp|All files (*.*)|*.*";
                     sd.Title = @"Export BMP image";
 
-                    if (x.ShowDialog(this) != DialogResult.OK)
+                    if (sd.ShowDialog(this) != DialogResult.OK)
                         return;
 
                     Exporter.ExportBmp(_document, sd.FileName);
+                    MessageBox.Show(this, $@"Export successful: {sd.FileName}", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     break;
                 }
                 case ExportFormat.Png:
@@ -399,10 +400,11 @@ public partial class MainWindow : Form
                     sd.Filter = @"PNG files (*.png)|*.png|All files (*.*)|*.*";
                     sd.Title = @"Export PNG image";
 
-                    if (x.ShowDialog(this) != DialogResult.OK)
+                    if (sd.ShowDialog(this) != DialogResult.OK)
                         return;
 
                     Exporter.ExportPng(_document, sd.FileName);
+                    MessageBox.Show(this, $@"Export successful: {sd.FileName}", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     break;
                 }
                 case ExportFormat.Json:
@@ -411,10 +413,11 @@ public partial class MainWindow : Form
                     sd.Filter = @"JSON files (*.json)|*.json|All files (*.*)|*.*";
                     sd.Title = @"Export JSON file";
 
-                    if (x.ShowDialog(this) != DialogResult.OK)
+                    if (sd.ShowDialog(this) != DialogResult.OK)
                         return;
 
                     Exporter.ExportJson(_document, sd.FileName);
+                    MessageBox.Show(this, $@"Export successful: {sd.FileName}", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     break;
                 }
                 case ExportFormat.Cs:
@@ -423,10 +426,11 @@ public partial class MainWindow : Form
                     sd.Filter = @"C# files (*.cs)|*.cs|All files (*.*)|*.*";
                     sd.Title = @"Export C# file";
 
-                    if (x.ShowDialog(this) != DialogResult.OK)
+                    if (sd.ShowDialog(this) != DialogResult.OK)
                         return;
 
                     Exporter.ExportCs(_document, sd.FileName);
+                    MessageBox.Show(this, $@"Export successful: {sd.FileName}", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     break;
                 }
             }

@@ -11,7 +11,7 @@ public class PerlinNoiseGenerator
     private Document? _d;
     private List<ColorLayer>? _colors;
 
-    public void Render(FastBitmap b, Document d)
+    public void RenderToBitmap(FastBitmap b, Document d)
     {
         _d = d;
         _colors = _d.ColorLayers.OrderBy(x => x.HighestValueFloat).ToList();
@@ -29,7 +29,6 @@ public class PerlinNoiseGenerator
             {
                 var nx = x / d.Scale;
                 var ny = y / d.Scale;
-
                 var noiseValue = Fbm(perlin, nx, ny, d.Octaves, persistence, lacunarity);
 
                 // Radial mask för kontinenter
@@ -37,12 +36,44 @@ public class PerlinNoiseGenerator
                 var dy = (y - d.Height / 2f) / (d.Height / 2f);
                 var dist = (float)Math.Sqrt(dx * dx + dy * dy);
                 var mask = Clamp(1f - dist, 0f, 1f);
-
                 var heightValue = noiseValue * mask;
-
                 b.SetPixel(x, y, HeightToColor(heightValue));
             }
         }
+    }
+
+    public ColorLayer[,]? RenderToArray(Document d)
+    {
+        _d = d;
+        _colors = _d.ColorLayers.OrderBy(x => x.HighestValueFloat).ToList();
+
+        if ((_colors?.Count ?? 0) < 2)
+            return null;
+
+        var result = new ColorLayer[d.Width, d.Height];
+        var persistence = d.Persistence / 100f; // hur snabbt amplituden minskar
+        var lacunarity = d.Lacunarity / 10f; // hur snabbt frekvensen ökar
+        var perlin = new Perlin(d.Seed);
+
+        for (var y = 0; y < d.Height; y++)
+        {
+            for (var x = 0; x < d.Width; x++)
+            {
+                var nx = x / d.Scale;
+                var ny = y / d.Scale;
+                var noiseValue = Fbm(perlin, nx, ny, d.Octaves, persistence, lacunarity);
+
+                // Radial mask för kontinenter
+                var dx = (x - d.Width / 2f) / (d.Width / 2f);
+                var dy = (y - d.Height / 2f) / (d.Height / 2f);
+                var dist = (float)Math.Sqrt(dx * dx + dy * dy);
+                var mask = Clamp(1f - dist, 0f, 1f);
+                var heightValue = noiseValue * mask;
+                result[x, y] = HeightToColorLayer(heightValue);
+            }
+        }
+
+        return result;
     }
 
     private static float Clamp(float value, float min, float max)
@@ -76,6 +107,20 @@ public class PerlinNoiseGenerator
         }
 
         return total / maxValue; // normalisera till [0,1]
+    }
+
+    private ColorLayer HeightToColorLayer(float h)
+    {
+        if (_d == null || _colors == null)
+            return new ColorLayer(0, "MISSING", Color.Green);
+
+        foreach (var color in _colors)
+        {
+            if (h <= color.HighestValueFloat)
+                return color;
+        }
+
+        return _colors.Last();
     }
 
     private Color HeightToColor(float h)
