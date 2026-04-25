@@ -42,7 +42,7 @@ public class PerlinNoiseGenerator
         }
     }
 
-    public ColorLayer[,]? RenderToArray(Document d)
+    public int[,]? RenderToArray(Document d)
     {
         _d = d;
         _colors = _d.ColorLayers.OrderBy(x => x.HighestValueFloat).ToList();
@@ -50,7 +50,7 @@ public class PerlinNoiseGenerator
         if ((_colors?.Count ?? 0) < 2)
             return null;
 
-        var result = new ColorLayer[d.Width, d.Height];
+        var result = new int[d.Width, d.Height];
         var persistence = d.Persistence / 100f; // hur snabbt amplituden minskar
         var lacunarity = d.Lacunarity / 10f; // hur snabbt frekvensen ökar
         var perlin = new Perlin(d.Seed);
@@ -69,7 +69,7 @@ public class PerlinNoiseGenerator
                 var dist = (float)Math.Sqrt(dx * dx + dy * dy);
                 var mask = Clamp(1f - dist, 0f, 1f);
                 var heightValue = noiseValue * mask;
-                result[x, y] = HeightToColorLayer(heightValue);
+                result[x, y] = HeightToColorLayerIndex(heightValue);
             }
         }
 
@@ -107,6 +107,12 @@ public class PerlinNoiseGenerator
         }
 
         return total / maxValue; // normalisera till [0,1]
+    }
+
+    private int HeightToColorLayerIndex(float h)
+    {
+        var layer = HeightToColorLayer(h);
+        return _colors?.IndexOf(layer) ?? -1;
     }
 
     private ColorLayer HeightToColorLayer(float h)
