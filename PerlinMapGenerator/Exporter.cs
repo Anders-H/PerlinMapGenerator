@@ -27,6 +27,40 @@ public class Exporter
 
         if (array == null)
             throw new SystemException("Failed to render array.");
+
+        var s = new StringBuilder();
+        s.AppendLine("{");
+        var index = 0;
+        s.AppendLine(@"   ""colorLayers"": [");
+        foreach (var documentColorLayer in document.ColorLayers)
+        {
+            var n = Clean(documentColorLayer.Name);
+            var c = $"{documentColorLayer.Color.R}, {documentColorLayer.Color.G}, {documentColorLayer.Color.B}";
+            var comma = documentColorLayer == document.ColorLayers.Last() ? "" : ",";
+            s.AppendLine($@"      {{""index"": {index}, ""name"": ""{n}"", ""color"": [{c}]}}{comma}");
+            index++;
+        }
+
+        s.AppendLine("   ],");
+        s.AppendLine(@"   ""mapData"": [");
+
+        for (var y = 0; y < array.GetLength(1); y++)
+        {
+            s.Append("      [");
+
+            for (var x = 0; x < array.GetLength(0); x++)
+            {
+                var comma = x == array.GetLength(0) - 1 ? "" : ", ";
+                s.Append($"{array[x, y]}{comma}");
+            }
+
+            var rowComma = y == array.GetLength(1) - 1 ? "" : ",";
+            s.AppendLine($"]{rowComma}");
+        }
+
+        s.AppendLine("   ]");
+        s.AppendLine("}");
+        File.WriteAllText(fileName, s.ToString());
     }
 
     public static void ExportCs(Document document, string fileName)
@@ -82,7 +116,7 @@ public class PerlinNoiseMap
         }
 
         s.Append(@"        };
-}
+    }
 
     public class PerlinNoiseMapColorLayer
     {
