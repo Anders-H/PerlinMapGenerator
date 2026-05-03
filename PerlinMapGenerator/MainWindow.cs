@@ -4,13 +4,13 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace PerlinMapGenerator;
 
 public partial class MainWindow : Form
 {
+    private bool _firstNew;
     private UndoBuffer _undoBuffer;
     private string? _filename;
     private Bitmap? _bitmap;
@@ -19,6 +19,7 @@ public partial class MainWindow : Form
 
     public MainWindow()
     {
+        _firstNew = true;
         _undoBuffer = new UndoBuffer();
         _filename = null;
         _document = new Document();
@@ -85,9 +86,17 @@ public partial class MainWindow : Form
     private void panel1_Resize(object sender, EventArgs e) =>
         SetPictureBoxSize();
 
-    private void MainWindow_Shown(object sender, EventArgs e) =>
-        Refresh();
+    private void MainWindow_Shown(object sender, EventArgs e)
+    {
+        if (_firstNew)
+        {
+            newToolStripMenuItem_Click(this, EventArgs.Empty);
+            _firstNew = false;
+        }
 
+        Refresh();
+    }
+    
     private void SetPictureBoxSize()
     {
         picMap.Width = (int)(_document.Width * _zoomFactor);
@@ -255,7 +264,12 @@ public partial class MainWindow : Form
 
     private void newToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        if (MessageBox.Show(this, @"Are you sure you want to create a new map? All unsaved progress will be lost.", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+        if (!_firstNew && MessageBox.Show(this, @"Are you sure you want to create a new map? All unsaved progress will be lost.", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+            return;
+
+        using var x = new NewDocumentDialog();
+        
+        if (x.ShowDialog(this) != DialogResult.OK)
             return;
 
         _undoBuffer = new UndoBuffer();
