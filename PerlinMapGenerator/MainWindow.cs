@@ -273,7 +273,7 @@ public partial class MainWindow : Form
             return;
 
         _undoBuffer = new UndoBuffer();
-        _document = new Document();
+        _document = x.Document;
         toolStripZoom100_Click(sender, e);
         SetPictureBoxSize();
         Render();

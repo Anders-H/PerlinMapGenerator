@@ -56,8 +56,28 @@ public class PresetList : List<Preset>
 
     private static Document GetHeavenPreset()
     {
-        var d = new Document();
+        var d = new Document
+        {
+            Octaves = 5,
+            Seed = 68304,
+            Scale = 59.0f,
+            Persistence = 50.0f,
+            Lacunarity = 19.0f
+        };
 
+        d.ColorLayers.Clear();
+        d.ColorLayers.Add(new ColorLayer(2, "SkyToCloud01", Color.FromArgb(255, 0, 128, 255)));
+        d.ColorLayers.Add(new ColorLayer(4, "SkyToCloud02", Color.FromArgb(255, 66, 160, 255)));
+        d.ColorLayers.Add(new ColorLayer(6, "SkyToCloud03", Color.FromArgb(255, 151, 203, 255)));
+        d.ColorLayers.Add(new ColorLayer(8, "SkyToCloud04", Color.FromArgb(255, 198, 226, 255)));
+        d.ColorLayers.Add(new ColorLayer(10, "SkyToCloud05", Color.FromArgb(255, 255, 255, 255)));
+        d.ColorLayers.Add(new ColorLayer(12, "SkyToCloud06", Color.FromArgb(255, 183, 219, 255)));
+        d.ColorLayers.Add(new ColorLayer(14, "SkyToCloud07", Color.FromArgb(255, 94, 174, 255)));
+        d.ColorLayers.Add(new ColorLayer(20, "SkyToCloud08", Color.FromArgb(255, 75, 164, 255)));
+        d.ColorLayers.Add(new ColorLayer(40, "SkyToCloud09", Color.FromArgb(255, 55, 155, 255)));
+        d.ColorLayers.Add(new ColorLayer(50, "SkyToCloud10", Color.FromArgb(255, 185, 220, 255)));
+        d.ColorLayers.Add(new ColorLayer(60, "SkyToCloud11", Color.FromArgb(255, 200, 240, 250)));
+        d.ColorLayers.Add(new ColorLayer(100, "SkyToCloud12", Color.FromArgb(255, 255, 255, 255)));
         return d;
     }
 

@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace PerlinMapGenerator;
@@ -15,6 +16,9 @@ public partial class NewDocumentDialog : Form
         InitializeComponent();
     }
 
+    public Document Document =>
+        _currentDocument ?? new Document();
+
     private void pictureBox1_Paint(object sender, PaintEventArgs e)
     {
         if (_currentDocument == null || _currentBitmap == null)
@@ -25,9 +29,7 @@ public partial class NewDocumentDialog : Form
 
     private void cboPreset_SelectedIndexChanged(object sender, EventArgs e)
     {
-        var selectedPreset = cboPreset.SelectedItem as Preset;
-        
-        if (selectedPreset == null)
+        if (cboPreset.SelectedItem is not Preset selectedPreset)
             return;
 
         _currentDocument = selectedPreset.Document;
@@ -99,5 +101,25 @@ public partial class NewDocumentDialog : Form
             cboPreset.Items.Add(preset);
 
         cboPreset.SelectedIndex = 0;
+    }
+
+    private void btnOk_Click(object sender, EventArgs e)
+    {
+        if (_currentDocument == null)
+            throw new SystemException("Confusion!!!");
+
+        if (_currentDocument.ColorLayers.Count < 2)
+        {
+            MessageBox.Show(this, @"You need at least 2 color layers to create a document.", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        if (_currentDocument.ColorLayers.Last().HighestValue < 100)
+        {
+            MessageBox.Show(this, @"The last color layer must have a highest value of 100.", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        DialogResult = DialogResult.OK;
     }
 }
