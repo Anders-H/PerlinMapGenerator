@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -24,7 +25,18 @@ public partial class NewDocumentDialog : Form
         if (_currentDocument == null || _currentBitmap == null)
             return;
 
-        e.Graphics.DrawImage(_currentBitmap, Point.Empty);
+        if (_currentBitmap.Width > pictureBox1.ClientRectangle.Width || _currentBitmap.Height > pictureBox1.ClientRectangle.Height)
+        {
+            e.Graphics.CompositingQuality = CompositingQuality.HighQuality;
+            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+        }
+        else
+        {
+            e.Graphics.CompositingQuality = CompositingQuality.HighSpeed;
+            e.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
+        }
+
+        e.Graphics.DrawImage(_currentBitmap, 0, 0, pictureBox1.ClientRectangle.Width, pictureBox1.ClientRectangle.Height);
     }
 
     private void cboPreset_SelectedIndexChanged(object sender, EventArgs e)
@@ -39,6 +51,14 @@ public partial class NewDocumentDialog : Form
 
     private void cboSize_SelectedIndexChanged(object sender, EventArgs e)
     {
+        if (_currentDocument == null)
+            return;
+
+        if (cboSize.SelectedItem is not PresetSize selectedSize)
+            return;
+
+        _currentDocument.Width = selectedSize.Width;
+        _currentDocument.Height = selectedSize.Height;
         Render();
         pictureBox1.Invalidate();
     }
@@ -100,6 +120,13 @@ public partial class NewDocumentDialog : Form
         foreach (var preset in presets)
             cboPreset.Items.Add(preset);
 
+        // ReSharper disable once CollectionNeverUpdated.Local
+        var sizes = new PresetSizeList();
+
+        foreach (var sizePreset in sizes)
+            cboSize.Items.Add(sizePreset);
+
+        cboSize.SelectedIndex = 3;
         cboPreset.SelectedIndex = 0;
     }
 

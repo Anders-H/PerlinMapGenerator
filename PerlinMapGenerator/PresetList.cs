@@ -1,6 +1,5 @@
 ﻿using PerlinMapGenerator.Dialogs.ColorDialogs;
 using System.Collections.Generic;
-using System.Data;
 using System.Drawing;
 
 namespace PerlinMapGenerator;
@@ -18,6 +17,8 @@ public class PresetList : List<Preset>
         Add(new Preset("Tropical Beach", GetTropicalBeachPreset()));
         Add(new Preset("Heaven", GetHeavenPreset()));
         Add(new Preset("Hell", GetHellPreset()));
+        Add(new Preset("Gradient", GetGradientPreset()));
+        Add(new Preset("Polkagris", GetPolkagrisPreset()));
     }
 
     private static int RandomSeed =>
@@ -83,7 +84,71 @@ public class PresetList : List<Preset>
 
     private static Document GetHellPreset()
     {
-        var d = new Document();
+        var d = new Document
+        {
+            Octaves = 7,
+            Seed = 389222,
+            Scale = 54.0f,
+            Persistence = 45.0f,
+            Lacunarity = 21.0f
+        };
+
+        d.ColorLayers.Clear();
+        d.ColorLayers.Add(new ColorLayer(10, "Pumice01", Color.FromArgb(255, 10, 10, 10)));
+        d.ColorLayers.Add(new ColorLayer(20, "Pumice02", Color.FromArgb(255, 20, 20, 20)));
+        d.ColorLayers.Add(new ColorLayer(30, "Pumice03", Color.FromArgb(255, 30, 30, 30)));
+        d.ColorLayers.Add(new ColorLayer(35, "Pumice04", Color.FromArgb(255, 40, 40, 40)));
+        d.ColorLayers.Add(new ColorLayer(40, "Pumice05", Color.FromArgb(255, 50, 50, 50)));
+        d.ColorLayers.Add(new ColorLayer(46, "Lava01", Color.FromArgb(255, 255, 0, 0)));
+        d.ColorLayers.Add(new ColorLayer(50, "Lava02" , Color.FromArgb(255, 255, 190, 10)));
+        d.ColorLayers.Add(new ColorLayer(64, "Lava 01 Again", Color.FromArgb(255, 255, 0, 0)));
+        d.ColorLayers.Add(new ColorLayer(68, "Pumice05 Again", Color.FromArgb(255, 50, 50, 50)));
+        d.ColorLayers.Add(new ColorLayer(100, "Pumice04 Again", Color.FromArgb(255, 40, 40, 40)));
+        return d;
+    }
+
+    private static Document GetGradientPreset()
+    {
+        var d = new Document
+        {
+            Octaves = 9,
+            Seed = 141717,
+            Scale = 35.0f,
+            Persistence = 47.0f,
+            Lacunarity = 19.0f
+        };
+
+        d.ColorLayers.Clear();
+        var grayValue = 4;
+
+        for (var i = 2; i <= 100; i += 2)
+        {
+            d.ColorLayers.Add(new ColorLayer(i, $"Gray {i}", Color.FromArgb(255, grayValue, grayValue, grayValue)));
+            grayValue += 4;
+        }
+
+        return d;
+    }
+
+    private static Document GetPolkagrisPreset()
+    {
+        var d = new Document
+        {
+            Octaves = 6,
+            Seed = 560879,
+            Scale = 61.0f,
+            Persistence = 35.0f,
+            Lacunarity = 14.0f
+        };
+
+        d.ColorLayers.Clear();
+        var isRed = false;
+
+        for (var i = 4; i <= 100; i += 4)
+        {
+            d.ColorLayers.Add(new ColorLayer(i, isRed ? "Red" : "White", isRed ? Color.FromArgb(255, 255, 0, 0) : Color.FromArgb(255, 255, 255, 255)));
+            isRed = !isRed;
+        }
 
         return d;
     }
