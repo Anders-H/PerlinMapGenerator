@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace PerlinMapGenerator;
+namespace PerlinMapGenerator.Dialogs;
 
 public partial class ExportDialog : Form
 {

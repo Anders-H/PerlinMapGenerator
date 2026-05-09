@@ -1,4 +1,4 @@
-﻿namespace PerlinMapGenerator
+﻿namespace PerlinMapGenerator.Dialogs
 {
     partial class ExportDialog
     {

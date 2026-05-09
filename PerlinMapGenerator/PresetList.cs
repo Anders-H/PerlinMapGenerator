@@ -22,7 +22,7 @@ public class PresetList : List<Preset>
     }
 
     private static int RandomSeed =>
-        AddColorDialog.Random.Next(1, 1000001);
+        PerlinRandom.GetInt(1, 1000001);
 
     private static Document GetBlankPreset()
     {

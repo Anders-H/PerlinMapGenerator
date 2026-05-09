@@ -221,4 +221,36 @@ public class Document
 
         return true;
     }
+
+    public void Mutate()
+    {
+        var scaleChange = PerlinRandom.GetInt(5, 6) / 10f;
+        var octavesChange = PerlinRandom.GetInt(3, 4);
+        var persistenceChange = PerlinRandom.GetInt(-10, 11) / 10f;
+        var lacunarityChange = PerlinRandom.GetInt(3, 4) / 10f;
+        Scale += scaleChange;
+        Octaves += octavesChange;
+        Persistence += persistenceChange;
+        Lacunarity += lacunarityChange;
+        
+        if (Scale < 10)
+            Scale = 10;
+        else if (Scale > 150)
+            Scale = 150;
+
+        if (Octaves < 10)
+            Octaves = 10;
+        else if (Octaves > 20)
+            Octaves = 20;
+
+        if (Persistence < 1)
+            Persistence = 1;
+        else if (Persistence > 100)
+            Persistence = 100;
+
+        if (Lacunarity < 1)
+            Lacunarity = 1;
+        else if (Lacunarity > 50)
+            Lacunarity = 50;
+    }
 }

@@ -72,13 +72,13 @@ public class ColorLayer
             return null;
 
         if (!int.TryParse(colorPartsString[0], NumberStyles.Any, CultureInfo.InvariantCulture, out var red))
-            red = AddColorDialog.Random.Next(0, 256);
+            red = PerlinRandom.GetRgb();
 
         if (!int.TryParse(colorPartsString[1], NumberStyles.Any, CultureInfo.InvariantCulture, out var green))
-            green = AddColorDialog.Random.Next(0, 256);
+            green = PerlinRandom.GetRgb();
 
         if (!int.TryParse(colorPartsString[2], NumberStyles.Any, CultureInfo.InvariantCulture, out var blue))
-            blue = AddColorDialog.Random.Next(0, 256);
+            blue = PerlinRandom.GetRgb();
 
         if (red < 0)
             red = 0;

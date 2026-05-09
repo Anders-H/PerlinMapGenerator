@@ -5,7 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace PerlinMapGenerator;
+namespace PerlinMapGenerator.Dialogs;
 
 public partial class NewDocumentDialog : Form
 {
@@ -47,6 +47,7 @@ public partial class NewDocumentDialog : Form
         _currentDocument = selectedPreset.Document;
         Render();
         pictureBox1.Invalidate();
+        UpdateListView();
     }
 
     private void cboSize_SelectedIndexChanged(object sender, EventArgs e)
@@ -61,6 +62,7 @@ public partial class NewDocumentDialog : Form
         _currentDocument.Height = selectedSize.Height;
         Render();
         pictureBox1.Invalidate();
+        UpdateListView();
     }
 
     private void btnMutate_Click(object sender, EventArgs e)
@@ -68,9 +70,10 @@ public partial class NewDocumentDialog : Form
         if (_currentDocument == null || _currentBitmap == null)
             return;
 
-        //_currentDocument.Mutate();
+        _currentDocument.Mutate();
         Render();
         pictureBox1.Invalidate();
+        UpdateListView();
     }
 
     private void Render()
@@ -148,5 +151,24 @@ public partial class NewDocumentDialog : Form
         }
 
         DialogResult = DialogResult.OK;
+    }
+
+    private void UpdateListView()
+    {
+        listView1.Items.Clear();
+        var item = listView1.Items.Add("Width");
+        item.SubItems.Add(Width.ToString("n0"));
+        item = listView1.Items.Add("Height");
+        item.SubItems.Add(Height.ToString("n0"));
+        item = listView1.Items.Add("Octaves");
+        item.SubItems.Add((_currentDocument?.Octaves ?? 0).ToString("n1"));
+        item = listView1.Items.Add("Seed");
+        item.SubItems.Add((_currentDocument?.Seed ?? 0).ToString("n0"));
+        item = listView1.Items.Add("Scale");
+        item.SubItems.Add((_currentDocument?.Scale ?? 0).ToString("n1"));
+        item = listView1.Items.Add("Persistence");
+        item.SubItems.Add((_currentDocument?.Persistence ?? 0).ToString("n1"));
+        item = listView1.Items.Add("Lacunarity");
+        item.SubItems.Add((_currentDocument?.Lacunarity ?? 0).ToString("n1"));
     }
 }
