@@ -29,5 +29,11 @@ public class ColorLayerList : List<ColorLayer>
         var sorted = this.OrderBy(x => x.HighestValue).ToList();
         Clear();
         AddRange(sorted);
+
+        if (Count <= 0)
+            return;
+
+        for (var i = 0; i < Count; i++)
+            this[i].ColorIndex = i;
     }
 }

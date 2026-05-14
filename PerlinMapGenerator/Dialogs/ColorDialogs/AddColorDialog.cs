@@ -42,7 +42,7 @@ public partial class AddColorDialog : Form
             return;
         }
 
-        NewColorLayer = new ColorLayer(trbHighestValue.Value, name, (System.Drawing.Color)btnColor.Tag);
+        NewColorLayer = new ColorLayer(trbHighestValue.Value, name, (System.Drawing.Color)btnColor.Tag, 0);
         DialogResult = DialogResult.OK;
     }
 

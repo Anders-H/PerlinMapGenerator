@@ -45,7 +45,6 @@ public class Perlin
 
         var x1 = Lerp(Grad(aa, xf, yf), Grad(ba, xf - 1, yf), u);
         var x2 = Lerp(Grad(ab, xf, yf - 1), Grad(bb, xf - 1, yf - 1), u);
-
         return Lerp(x1, x2, v);
     }
 

@@ -11,13 +11,15 @@ public class ColorLayer
     public float HighestValueFloat { get; }
     public string Name { get; set; }
     public Color Color { get; set; }
+    public int ColorIndex { get; set; }
 
-    public ColorLayer(int highestValue, string name, Color color)
+    public ColorLayer(int highestValue, string name, Color color, int colorIndex)
     {
         HighestValue = highestValue;
         HighestValueFloat = HighestValue / 100f;
         Name = name;
         Color = color;
+        ColorIndex = colorIndex;
     }
 
     public ColorLayer(ColorLayer original)
@@ -26,6 +28,7 @@ public class ColorLayer
         HighestValueFloat = HighestValue / 100f;
         Name = original.Name;
         Color = original.Color;
+        ColorIndex = original.ColorIndex;
     }
 
     public override string ToString() =>
@@ -95,6 +98,6 @@ public class ColorLayer
         else if (blue > 255)
             blue = 255;
 
-        return new ColorLayer(highestValue, name, Color.FromArgb(red, green, blue));
+        return new ColorLayer(highestValue, name, Color.FromArgb(red, green, blue), 0);
     }
 }

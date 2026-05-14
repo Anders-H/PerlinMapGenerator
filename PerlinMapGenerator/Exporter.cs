@@ -32,6 +32,7 @@ public class Exporter
         s.AppendLine("{");
         var index = 0;
         s.AppendLine(@"   ""colorLayers"": [");
+
         foreach (var documentColorLayer in document.ColorLayers)
         {
             var n = Clean(documentColorLayer.Name);
@@ -73,7 +74,7 @@ public class Exporter
         var s = new StringBuilder();
         s.AppendLine(@"using System.Drawing;
 
-namespace KillPerlinExportTest;
+namespace NamespaceGoesHere;
 
 public class PerlinNoiseMap
 {
@@ -169,7 +170,7 @@ public class PerlinNoiseMap
     private static int[,]? GetArray(Document document)
     {
         var perlinNoiseGenerator = new PerlinNoiseGenerator();
-        var array = perlinNoiseGenerator.RenderToArray(document);
+        var array = perlinNoiseGenerator.RenderToIntArray(document);
         return array;
     }
 }

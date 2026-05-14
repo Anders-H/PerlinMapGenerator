@@ -34,8 +34,8 @@ public class Document
 
         ColorLayers =
         [
-            new ColorLayer(30, "Black", Color.FromArgb(255, 0, 0, 0)),
-            new ColorLayer(60, "White", Color.FromArgb(255, 255, 255, 255)),
+            new ColorLayer(30, "Black", Color.FromArgb(255, 0, 0, 0), 0),
+            new ColorLayer(60, "White", Color.FromArgb(255, 255, 255, 255), 1),
         ];
     }
 
@@ -167,6 +167,7 @@ public class Document
                 return null;
             }
 
+            colorLayer.ColorIndex = document.ColorLayers.Count;
             document.ColorLayers.Add(colorLayer);
         }
 
