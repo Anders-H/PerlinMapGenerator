@@ -1,5 +1,4 @@
 ﻿#nullable enable
-using PerlinMapGenerator.Dialogs.ColorDialogs;
 using System.Drawing;
 using System.Globalization;
 

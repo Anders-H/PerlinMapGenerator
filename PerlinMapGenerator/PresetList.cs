@@ -1,18 +1,12 @@
-﻿using PerlinMapGenerator.Dialogs.ColorDialogs;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 
 namespace PerlinMapGenerator;
 
 public class PresetList : List<Preset>
 {
-    private int _width;
-    private int _height;
-
-    public PresetList(int width, int height)
+    public PresetList()
     {
-        _width = width;
-        _height = height;
         Add(new Preset("Blank", GetBlankPreset()));
         Add(new Preset("Tropical Beach", GetTropicalBeachPreset()));
         Add(new Preset("Heaven", GetHeavenPreset()));

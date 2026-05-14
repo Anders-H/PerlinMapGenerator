@@ -103,7 +103,7 @@ public partial class NewDocumentDialog : Form
             _currentBitmap = new Bitmap(_currentDocument.Width, _currentDocument.Height);
             var fastBitmap = new FastBitmap(_currentBitmap);
             var perlinNoiseGenerator = new PerlinNoiseGenerator();
-            fastBitmap.Lock(FastBitmapLockFormat.Format32bppRgb);
+            fastBitmap.Lock(FastBitmapLockFormat.Format32BppRgb);
             perlinNoiseGenerator.RenderToBitmap(fastBitmap, _currentDocument);
             fastBitmap.Unlock();
         }
@@ -116,9 +116,8 @@ public partial class NewDocumentDialog : Form
     private void NewDocumentDialog_Shown(object sender, EventArgs e)
     {
         Refresh();
-        var size = new Size(400, 400);
         // ReSharper disable once CollectionNeverUpdated.Local
-        var presets = new PresetList(size.Width, size.Height);
+        var presets = new PresetList();
 
         foreach (var preset in presets)
             cboPreset.Items.Add(preset);

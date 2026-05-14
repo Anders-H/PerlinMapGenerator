@@ -50,7 +50,7 @@ public unsafe class FastBitmap : IDisposable
     /// <summary>
     /// The BitmapData resulted from the lock operation
     /// </summary>
-    private BitmapData _bitmapData;
+    private BitmapData? _bitmapData;
 
     /// <summary>
     /// The first pixel of the bitmap
@@ -70,7 +70,7 @@ public unsafe class FastBitmap : IDisposable
     /// <summary>
     /// Gets the pointer to the first pixel of the bitmap
     /// </summary>
-    public IntPtr Scan0 => _bitmapData.Scan0;
+    public IntPtr Scan0 => _bitmapData!.Scan0;
 
     /// <summary>
     /// Gets the stride width (in int32-sized values) of the bitmap
@@ -86,39 +86,6 @@ public unsafe class FastBitmap : IDisposable
     /// Gets a boolean value that states whether this FastBitmap is currently locked in memory
     /// </summary>
     public bool Locked { get; private set; }
-
-    /// <summary>
-    /// Gets an array of 32-bit color pixel values that represent this FastBitmap.
-    /// </summary>
-    /// <exception cref="Exception">The locking operation required to extract the values off from the underlying bitmap failed</exception>
-    /// <exception cref="InvalidOperationException">The bitmap is already locked outside this fast bitmap</exception>
-    [Obsolete("DataArray property is deprecated. Please use GetDataAsArray() method instead.")]
-    public int[] DataArray
-    {
-        get
-        {
-            bool unlockAfter = false;
-            if (!Locked)
-            {
-                Lock();
-                unlockAfter = true;
-            }
-
-            // Declare an array to hold the bytes of the bitmap
-            int bytes = Math.Abs(_bitmapData.Stride) * _bitmap.Height;
-            int[] argbValues = new int[bytes / BytesPerPixel];
-
-            // Copy the RGB values into the array
-            Marshal.Copy(_bitmapData.Scan0, argbValues, 0, bytes / BytesPerPixel);
-
-            if (unlockAfter)
-            {
-                Unlock();
-            }
-
-            return argbValues;
-        }
-    }
 
     /// <summary>
     /// Creates a new instance of the FastBitmap class with a specified Bitmap.
@@ -490,7 +457,7 @@ public unsafe class FastBitmap : IDisposable
         }
 
         // Declare an array to hold the bytes of the bitmap
-        int bytes = Math.Abs(_bitmapData.Stride) * _bitmap.Height;
+        int bytes = Math.Abs(_bitmapData!.Stride) * _bitmap.Height;
         int[] argbValues = new int[bytes / BytesPerPixel];
 
         // Copy the RGB values into the array
@@ -713,24 +680,22 @@ public unsafe class FastBitmap : IDisposable
         int destStartX = destBitmapRect.Left;
         int destStartY = destBitmapRect.Top;
 
-        using (var fastSource = source.FastLock())
+        using var fastSource = source.FastLock();
+        ulong strideWidth = (ulong)copyWidth * BytesPerPixel;
+
+        // Perform copies of whole pixel rows
+        for (int y = 0; y < copyHeight; y++)
         {
-            ulong strideWidth = (ulong)copyWidth * BytesPerPixel;
+            int destX = destStartX;
+            int destY = destStartY + y;
 
-            // Perform copies of whole pixel rows
-            for (int y = 0; y < copyHeight; y++)
-            {
-                int destX = destStartX;
-                int destY = destStartY + y;
+            int srcX = srcStartX;
+            int srcY = srcStartY + y;
 
-                int srcX = srcStartX;
-                int srcY = srcStartY + y;
+            long offsetSrc = (srcX + srcY * fastSource.Stride);
+            long offsetDest = (destX + destY * Stride);
 
-                long offsetSrc = (srcX + srcY * fastSource.Stride);
-                long offsetDest = (destX + destY * Stride);
-
-                memcpy(_scan0 + offsetDest, fastSource._scan0 + offsetSrc, strideWidth);
-            }
+            memcpy(_scan0 + offsetDest, fastSource._scan0 + offsetSrc, strideWidth);
         }
     }
 
@@ -752,12 +717,8 @@ public unsafe class FastBitmap : IDisposable
         if (source.Width != target.Width || source.Height != target.Height || source.PixelFormat != target.PixelFormat)
             return false;
 
-        using (FastBitmap fastSource = source.FastLock(),
-            fastTarget = target.FastLock())
-        {
-            memcpy(fastTarget.Scan0, fastSource.Scan0, (ulong)(fastSource.Height * fastSource.Stride * BytesPerPixel));
-        }
-
+        using FastBitmap fastSource = source.FastLock(), fastTarget = target.FastLock();
+        memcpy(fastTarget.Scan0, fastSource.Scan0, (ulong)(fastSource.Height * fastSource.Stride * BytesPerPixel));
         return true;
     }
 
@@ -778,10 +739,8 @@ public unsafe class FastBitmap : IDisposable
     /// <param name="color">The color to clear the bitmap with</param>
     public static void ClearBitmap(Bitmap bitmap, int color)
     {
-        using (var fb = bitmap.FastLock())
-        {
-            fb.Clear(color);
-        }
+        using var fb = bitmap.FastLock();
+        fb.Clear(color);
     }
 
     /// <summary>
@@ -804,10 +763,8 @@ public unsafe class FastBitmap : IDisposable
             return;
         }
 
-        using (var fastTarget = target.FastLock())
-        {
-            fastTarget.CopyRegion(source, srcRect, destRect);
-        }
+        using var fastTarget = target.FastLock();
+        fastTarget.CopyRegion(source, srcRect, destRect);
     }
 
     /// <summary>
@@ -834,7 +791,7 @@ public unsafe class FastBitmap : IDisposable
         }
 
         var slicedBitmap = new Bitmap(sliceRectangle.Width, sliceRectangle.Height);
-        CopyRegion(source, slicedBitmap, sliceRectangle, new Rectangle(0, 0, sliceRectangle.Width, sliceRectangle.Height));
+        CopyRegion(source, slicedBitmap, sliceRectangle, sliceRectangle with { X = 0, Y = 0 });
 
         return slicedBitmap;
     }
@@ -911,11 +868,11 @@ public unsafe class FastBitmap : IDisposable
 public enum FastBitmapLockFormat
 {
     /// <summary>Specifies that the format is 32 bits per pixel; 8 bits each are used for the red, green, and blue components. The remaining 8 bits are not used.</summary>
-    Format32bppRgb = 139273,
+    Format32BppRgb = 139273,
     /// <summary>Specifies that the format is 32 bits per pixel; 8 bits each are used for the alpha, red, green, and blue components. The red, green, and blue components are premultiplied, according to the alpha component.</summary>
-    Format32bppPArgb = 925707,
+    Format32BppPArgb = 925707,
     /// <summary>Specifies that the format is 32 bits per pixel; 8 bits each are used for the alpha, red, green, and blue components.</summary>
-    Format32bppArgb = 2498570,
+    Format32BppArgb = 2498570,
 }
 
 /// <summary>
@@ -923,41 +880,38 @@ public enum FastBitmapLockFormat
 /// </summary>
 public static class FastBitmapExtensions
 {
-    /// <summary>
-    /// Locks this bitmap into memory and returns a FastBitmap that can be used to manipulate its pixels
-    /// </summary>
     /// <param name="bitmap">The bitmap to lock</param>
-    /// <returns>A locked FastBitmap</returns>
-    public static FastBitmap FastLock(this Bitmap bitmap)
+    extension(Bitmap bitmap)
     {
-        var fast = new FastBitmap(bitmap);
-        fast.Lock();
+        /// <summary>
+        /// Locks this bitmap into memory and returns a FastBitmap that can be used to manipulate its pixels
+        /// </summary>
+        /// <returns>A locked FastBitmap</returns>
+        public FastBitmap FastLock()
+        {
+            var fast = new FastBitmap(bitmap);
+            fast.Lock();
+            return fast;
+        }
 
-        return fast;
-    }
+        /// <summary>
+        /// Locks this bitmap into memory and returns a FastBitmap that can be used to manipulate its pixels
+        /// </summary>
+        /// <param name="lockFormat">The underlying pixel format to use when locking the bitmap</param>
+        /// <returns>A locked FastBitmap</returns>
+        public FastBitmap FastLock(FastBitmapLockFormat lockFormat)
+        {
+            var fast = new FastBitmap(bitmap);
+            fast.Lock(lockFormat);
+            return fast;
+        }
 
-    /// <summary>
-    /// Locks this bitmap into memory and returns a FastBitmap that can be used to manipulate its pixels
-    /// </summary>
-    /// <param name="bitmap">The bitmap to lock</param>
-    /// <param name="lockFormat">The underlying pixel format to use when locking the bitmap</param>
-    /// <returns>A locked FastBitmap</returns>
-    public static FastBitmap FastLock(this Bitmap bitmap, FastBitmapLockFormat lockFormat)
-    {
-        var fast = new FastBitmap(bitmap);
-        fast.Lock(lockFormat);
-
-        return fast;
-    }
-
-    /// <summary>
-    /// Returns a deep clone of this Bitmap object, with all the data copied over.
-    /// After a deep clone, the new bitmap is completely independent from the original
-    /// </summary>
-    /// <param name="bitmap">The bitmap to clone</param>
-    /// <returns>A deep clone of this Bitmap object, with all the data copied over</returns>
-    public static Bitmap DeepClone(this Bitmap bitmap)
-    {
-        return bitmap.Clone(new Rectangle(0, 0, bitmap.Width, bitmap.Height), bitmap.PixelFormat);
+        /// <summary>
+        /// Returns a deep clone of this Bitmap object, with all the data copied over.
+        /// After a deep clone, the new bitmap is completely independent from the original
+        /// </summary>
+        /// <returns>A deep clone of this Bitmap object, with all the data copied over</returns>
+        public Bitmap DeepClone() =>
+            bitmap.Clone(new Rectangle(0, 0, bitmap.Width, bitmap.Height), bitmap.PixelFormat);
     }
 }

@@ -161,7 +161,7 @@ public class PerlinNoiseMap
         var bitmap = new Bitmap(document.Width, document.Height);
         var fastBitmap = new FastBitmap(bitmap);
         var perlinNoiseGenerator = new PerlinNoiseGenerator();
-        fastBitmap.Lock(FastBitmapLockFormat.Format32bppRgb);
+        fastBitmap.Lock(FastBitmapLockFormat.Format32BppRgb);
         perlinNoiseGenerator.RenderToBitmap(fastBitmap, document);
         fastBitmap.Unlock();
         return bitmap;

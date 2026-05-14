@@ -68,7 +68,7 @@ public partial class MainWindow : Form
             _bitmap = new Bitmap(_document.Width, _document.Height);
             var fastBitmap = new FastBitmap(_bitmap);
             var perlinNoiseGenerator = new PerlinNoiseGenerator();
-            fastBitmap.Lock(FastBitmapLockFormat.Format32bppRgb);
+            fastBitmap.Lock(FastBitmapLockFormat.Format32BppRgb);
             perlinNoiseGenerator.RenderToBitmap(fastBitmap, _document);
             fastBitmap.Unlock();
         }
@@ -318,7 +318,7 @@ public partial class MainWindow : Form
         }
 
         _undoBuffer = new UndoBuffer();
-        _document = document!;
+        _document = document;
         _filename = filename;
         toolStripZoom100_Click(sender, e);
         SetPictureBoxSize();

@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using System;
 using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace PerlinMapGenerator.Dialogs.ColorDialogs;
 
