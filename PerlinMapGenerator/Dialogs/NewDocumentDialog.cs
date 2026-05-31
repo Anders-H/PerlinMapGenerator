@@ -45,6 +45,18 @@ public partial class NewDocumentDialog : Form
             return;
 
         _currentDocument = selectedPreset.Document;
+        
+        if (cboSize.SelectedItem is PresetSize selectedSize)
+        {
+            _currentDocument.Width = selectedSize.Width;
+            _currentDocument.Height = selectedSize.Height;
+        }
+        else
+        {
+            _currentDocument.Width = 400;
+            _currentDocument.Height = 400;
+        }
+
         Render();
         pictureBox1.Invalidate();
         UpdateListView();
